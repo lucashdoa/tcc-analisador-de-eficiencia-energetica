@@ -1,0 +1,9 @@
+<ul class="header-menu">
+    <li class="menu-active"><a href="{% url 'index' %}">Início</a></li>
+    {% if user.is_authenticated %}<li><a href="{% url 'panel' %}">Painel</a></li>{% endif %}
+    <li><a href="{% url 'about' %}">Sobre</a></li>
+    <li><a href="{% url 'pbe' %}"">PBE</a></li>
+    <li><a href="{% url 'help' %}">Ajuda</a></li>
+    <li><a href="{% url 'contact' %}">Contato</a></li>
+    {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Sair</a></li>{% endif %}
+</ul>

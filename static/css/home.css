@@ -1,0 +1,25 @@
+.segment .home-button{
+    display: block;
+    width: 40%;
+    margin: 0px auto;
+}
+
+.segment p{
+    margin: 0px 0px 20px 0px;
+}
+
+.segment h3{
+    margin-bottom: 20px;
+}
+
+.segment h4{
+    margin: 40px 0px 20px 0px;
+}
+.home-button-group{
+    display: flex;
+    margin: 0 0 20px 0;
+}
+
+hr{
+    margin: 20px 0px;
+}

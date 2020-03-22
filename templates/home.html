@@ -1,0 +1,119 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitor de Eficiência Energética</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="{% static "img/logo.svg" %}" alt="logo"/>
+                <h1>Monitor de Eficiência Energética</h1>
+            </div>
+            <nav class="header-nav">
+                {% include 'includes/navbar-menu.html' %}
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="main-container">
+            <h2>Bem vindo {{ user.first_name }} ! </h2>
+            <div class="main-content">
+                <div class="segment">
+
+
+                    <h3>Meus Dados</h3>
+                    <form class="user-data">
+                        <label for="first-name">Nome</label>
+                        <input name="first-name" type="text" placeholder="Nome" value="{{ user.first_name }}" disabled/>
+                        <label for="last-name">Sobrenome</label>
+                        <input name="last-name" type="text" placeholder="Sobrenome" value="{{ user.last_name }}" disabled/>
+                        <label for="email">Email</label>
+                        <input name="email" type="text" placeholder="Email" value="{{ user.email }}" disabled/>
+                        <div class="home-button-group">
+                            <button class="home-button">Alterar meus dados</button>
+                            <button class="home-button">Alterar senha</button>
+                        </div>
+                    </form>
+                    <hr/>
+                    <h3>Endereços</h3>
+                    <div>
+                        {% if addresses %}
+                            {% for address in addresses %}
+                                <h4>Endereço {{ forloop.counter }}</h4>
+                                <label for="street">Rua</label>
+                                <input id="address-street-{{ address.pk }}" name="street" type="text" placeholder="Nome" value="{{ address.street }}" disabled/>
+                                <label for="number">Número</label>
+                                <input id="address-number-{{ address.pk }}" name="number" type="text" placeholder="Número" value="{{ address.number }}" disabled/>
+                                <label for="neighborhood">Bairro</label>
+                                <input id="address-neighborhood-{{ address.pk }}" name="neighborhood" type="text" placeholder="Bairro" value="{{ address.neighborhood }}" disabled/>
+                                {% if address.complement %}
+                                    <label for="complement">Complemento</label>
+                                    <input id="address-complement-{{ address.pk }}" name="complement" type="text" placeholder="Complemento" value="{{ address.complement }}" disabled/>
+                                {% else %}
+                                    <label for="complement">Complemento</label>
+                                    <input id="address-complement-{{ address.pk }}" name="complement" type="text" placeholder="Complemento" value="Não informado" disabled/>
+                                {% endif %}
+                                <label for="city">Cidade</label>
+                                <input id="address-city-{{ address.pk }}" name="city" type="text" placeholder="Cidade" value="{{ address.city }}" disabled/>
+                                <label for="energy-company">Companhia de energia elétrica</label>
+                                <input id="address-energy-company-{{ address.pk }}" name="energy-company" type="text" placeholder="Companhia de energia elétrica" value="{{ address.energy_company }}" disabled/>
+                            {% endfor %}
+                        {% else %}
+                            <p>Você não possui nenhum endereço cadastrado.</p>
+                        {% endif %}
+                    <button class="home-button">Cadastrar novo endereço</button>
+                    </div>
+                    <hr/>
+                    <h3>Eletrodomésticos</h3>
+                    <div>
+                        {% if household_appliances %}
+                            {% for item in household_appliances %}
+                                <h4>Eletrodoméstico {{ forloop.counter }}</h4>
+                                <label for="type">Tipo</label>
+                                <input id="item-type-{{ item.pk }}" name="type" type="text" placeholder="Tipo" value="{{ item.type }}" disabled/>
+                                <label for="model">Modelo</label>
+                                <input id="item-model-{{ item.pk }}" name="model" type="text" placeholder="Modelo" value="{{ item.model }}" disabled/>
+                                <label for="brand">Marca</label>
+                                <input id="item-brand-{{ item.pk }}" name="brand" type="text" placeholder="Tipo" value="{{ item.brand }}" disabled/>
+                                <label for="classification">Classificação obtida no PBE</label>
+                                <input id="item-classification-{{ item.pk }}" name="classification" type="text" placeholder="Classificação" value="{{ item.classification }}" disabled/>
+                                <label for="energy_consumption">Consumo informado pelo fabricante (kWh/mês)</label>
+                                <input id="item-energy-consumption-{{ item.pk }}" name="energy_consumption" type="text" placeholder="Consumo" value="{{ item.energy_consumption }}" disabled/>
+
+                            {% endfor %}
+                        {% else %}
+                            <p>Você não possui nenhum eletrodoméstico cadastrado.</p>
+                        {% endif %}
+                    </div>
+                    <button class="home-button">Cadastrar novo eletrodoméstico</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <h4>2020 - Desenvolvido por Lucas Andrade</h4>
+        </div>
+    </footer>
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+</body>
+</html>

@@ -5,169 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Monitor de Eficiência Energética</title>
-    <style>
-        *{
-            margin: 0px;
-            padding: 0px;
-            box-sizing: border-box;
-            font-family: Arial;
-        }
-        header{
-            background: #0087d8;
-            padding: 20px 0;
-        }
-
-        .header-container{
-            width: 960px;
-            margin: 0 auto;
-        }
-
-        .header-container::after, .header-container::before{
-            content: ' ';
-            display: table;
-            clear: both;
-        }
-
-        .header-logo{
-            display: block;
-            float: left;
-            margin-left: 10px;
-            height: 105px;
-        }
-
-        .header-logo img{
-            max-width: 90px;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .header-logo h1{
-            font-size: 1em;
-            color: #fff;
-        }
-
-        .header-nav{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            float: right;
-            margin-right: 10px;
-            height: 105px;
-        }
-
-        .header-menu{
-            list-style: none;
-            color: white;
-
-        }
-
-        .header-menu li{
-            display: inline-block;
-        }
-
-        .header-menu li a{
-            display: block;
-            padding: 15px 15px 5px 15px;
-            text-decoration: none;
-            font-size: 1.125em;
-            color: #fff;
-            border-bottom: 5px solid rgba(0,0,0,0);
-            transition: 0.5s;
-        }
-
-        .header-menu li a:hover{
-            color: #FFDD55;
-            border-bottom: 5px solid #FFDD55 !important;
-        }
-
-        .menu-active a{
-            border-bottom: 5px solid #ffffff !important;
-        }
-
-        .main-container{
-            width: 960px;
-            margin: 0 auto 100px auto;
-        }
-
-        .main-container h2{
-            display: block;
-            margin-top: 100px;
-            text-align: center;
-        }
-
-        .main-login{
-            height: 400px;
-        }
-
-        .login-page {
-            width: 360px;
-
-            margin: 100px auto;
-        }
-        .form {
-            position: relative;
-            z-index: 1;
-            background: #FFFFFF;
-            max-width: 360px;
-            margin: 0 auto 100px;
-            padding: 45px;
-            text-align: center;
-            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-        }
-        .form input {
-            font-family: "Roboto", sans-serif;
-            outline: 0;
-            background: #f2f2f2;
-            width: 100%;
-            border: 0;
-            margin: 0 0 15px;
-            padding: 15px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        .form button {
-            font-family: Arial;
-            text-transform: uppercase;
-            outline: 0;
-            background: #0087d8;
-            width: 100%;
-            border: 0;
-            padding: 15px;
-            color: #FFFFFF;
-            font-size: 14px;
-            -webkit-transition: all 0.3 ease;
-            transition: all 0.3 ease;
-            cursor: pointer;
-        }
-        .form button:hover,.form button:active,.form button:focus {
-            background: #FFDD55;
-            color: black;
-        }
-        .form .message {
-            margin: 15px 0 0;
-            color: #b3b3b3;
-            font-size: 12px;
-        }
-        .form .message a {
-            color: #0087d8;
-            text-decoration: none;
-        }
-        .form .register-form {
-            display: none;
-        }
-
-        footer{
-            background: #404040;
-            padding: 50px 0;
-        }
-        .footer-container{
-            width: 960px;
-            margin: 0 auto;
-            color: white;
-            text-align: center;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
@@ -179,11 +17,13 @@
             </div>
             <nav class="header-nav">
                 <ul class="header-menu">
-                    <li><a href="{% url 'home' %}">Início</a></li>
+                    <li><a href="{% url 'index' %}">Início</a></li>
+                    {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Painel</a></li>{% endif %}
                     <li><a href="{% url 'about' %}">Sobre</a></li>
                     <li><a href="{% url 'pbe' %}"">PBE</a></li>
                     <li class="menu-active"><a href="{% url 'help' %}">Ajuda</a></li>
                     <li><a href="{% url 'contact' %}">Contato</a></li>
+                    {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Sair</a></li>{% endif %}
                 </ul>
             </nav>
         </div>

@@ -1,0 +1,123 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monitor de Eficiência Energética</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/panel.css' %}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="header-logo">
+                <img src="{% static "img/logo.svg" %}" alt="logo"/>
+                <h1>Monitor de Eficiência Energética</h1>
+            </div>
+            <nav class="header-nav">
+                <ul class="header-menu">
+                    <li><a href="{% url 'index' %}">Início</a></li>
+                    {% if user.is_authenticated %}<li class="menu-active"><a href="{% url 'panel' %}">Painel</a></li>{% endif %}
+                    <li><a href="{% url 'about' %}">Sobre</a></li>
+                    <li><a href="{% url 'pbe' %}"">PBE</a></li>
+                    <li><a href="{% url 'help' %}">Ajuda</a></li>
+                    <li><a href="{% url 'contact' %}">Contato</a></li>
+                    {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Sair</a></li>{% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="main-container">
+            <h2>{{ household_appliances.first.type }} {{ household_appliances.first.brand }} - {{ household_appliances.first.model }}</h2>
+            <div class="main-content">
+                <div class="segment">
+                    <h3 class="segment-title">Etiqueta atualizada</h3>
+                    <div id="tag-a" class="tag-div">
+                        <div id="tag-a-rectangle"></div>
+                        <div id="tag-a-pointer">
+                            A
+                        </div>
+                        <div class="tag-pointer-black">
+                            A
+                        </div>
+                    </div>
+                    <div id="tag-b" class="tag-div">
+                        <div id="tag-b-rectangle"></div>
+                        <div id="tag-b-pointer">
+                            B
+                        </div>
+                        <div class="tag-pointer-black">
+                            B
+                        </div>
+                    </div>
+                    <div id="tag-c" class="tag-div">
+                        <div id="tag-c-rectangle"></div>
+                        <div id="tag-c-pointer">
+                            C
+                        </div>
+                        <div class="tag-pointer-black">
+                            C
+                        </div>
+                    </div>
+                    <div id="tag-d" class="tag-div">
+                        <div id="tag-d-rectangle"></div>
+                        <div id="tag-d-pointer">
+                            D
+                        </div>
+                        <div class="tag-pointer-black">
+                            D
+                        </div>
+                    </div>
+                    <div id="tag-e" class="tag-div">
+                        <div id="tag-e-rectangle"></div>
+                        <div id="tag-e-pointer">
+                            E
+                        </div>
+                        <div class="tag-pointer-black">
+                            E
+                        </div>
+                    </div>
+                    <div id="tag-f" class="tag-div">
+                        <div id="tag-f-rectangle"></div>
+                        <div id="tag-f-pointer">
+                            F
+                        </div>
+                        <div class="tag-pointer-black">
+                            F
+                        </div>
+                    </div>
+                    <div id="tag-g" class="tag-div">
+                        <div id="tag-g-rectangle"></div>
+                        <div id="tag-g-pointer">
+                            G
+                        </div>
+                        <div class="tag-pointer-black">
+                            G
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <h4>2020 - Desenvolvido por Lucas Andrade</h4>
+        </div>
+    </footer>
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+</body>
+</html>

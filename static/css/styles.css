@@ -2,7 +2,7 @@
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
-    font-family: Arial;
+    font-family: Arial !important;
 }
 header{
     background: #0087d8;
@@ -38,8 +38,11 @@ header{
 }
 
 .header-logo h1{
-    font-size: 1em;
+    font-size: 1em !important;
     color: #fff;
+    margin: 0px !important;
+    font-weight: bold !important;
+    line-height: 1em !important;
 }
 
 .header-nav{
@@ -191,7 +194,7 @@ header{
 }
 
 .segment h3 {
-    font-size: 1.25em;
+    font-size: 1.25em !important;
 }
 
 .segment p {
@@ -254,3 +257,6 @@ footer{
     text-align: center;
 }
 
+hr{
+    margin: 20px 0px;
+}

@@ -5,8 +5,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Monitor de Eficiência Energética</title>
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}">
+
+
+    <!-- DATATABLES JS  -->
+    <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.semanticui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/buttons.semanticui.min.js' %}"></script>
+    <!-- DATATABLES CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.semanticui.min.css">
+    <link rel="stylesheet" href="{% static 'css/dataTables.semanticui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buttons.semanticui.min.css' %}">
+
+
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/panel.css' %}">
+
+
+    <script>
+
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", '{% csrf_token %}');
+                }
+            }
+        });
+    </script>
 </head>
 <body>
 
@@ -99,7 +137,44 @@
                             G
                         </div>
                     </div>
+                    <hr>
+{#                    CHARTS#}
+                    <h3 class="segment-title">Medições</h3>
+                    <table class="ui celled striped table" id="measure-datatable">
+                        <thead>
+                        <tr>
+                            <th>Tensão</th>
+                            <th>Corrente</th>
+                            <th>Potência Ativa</th>
+                            <th>Fator de Potência</th>
+                            <th>Frequência</th>
+                            <th>Energia</th>
+                            <th>Data</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th><b>Tensão</b></th>
+                            <th><b>Corrente</b></th>
+                            <th><b>Potência Ativa</b></th>
+                            <th><b>Fator de Potência</b></th>
+                            <th><b>Frequência</b></th>
+                            <th><b>Energia</b></th>
+                            <th><b>Data</b></th>
+
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {# BACKEND #}
+                        </tbody>
+                    </table>
+                    <hr/>
+                    <h3 class="segment-title">Gráficos</h3>
+                    <div class="six wide column">
+                        <canvas id="test-chart"></canvas>
+                    </div>
                 </div>
+
         </div>
     </main>
 
@@ -109,15 +184,70 @@
         </div>
     </footer>
 
-    <script
-            src="https://code.jquery.com/jquery-3.4.1.min.js"
-            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-            crossorigin="anonymous">
-    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 
+    {#DataTable#}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var measures_datatable = $('#measure-datatable').DataTable({
+                dom: "<'ui stackable grid'<'row'<'ten wide column'B><'right aligned six wide column'f>><'row dt-table'<'sixteen wide column'tr>><'row'<'seven wide column'i><'right aligned nine wide column'p>>>",
+                buttons: ['pageLength'],
+                order: [[0, "desc"]],
+                pagingType: "numbers",
+                "columnDefs": [ {
+                    "orderable": false,
+                    "targets": []
+                }],
+                processing: true,
+                serverSide: true,
+                ajax: "{% url 'measure_datatable' household_appliances.first %}",
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
+                }
+            });
+        });
+    </script>
 
+    {#Chart#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: '{% url "test_chart" %}',
+                type: 'POST',
+                dataType: "json",
+                success: function (data) {
+                    if (data.valid) {
+                        new Chart(document.getElementById("test-chart"), {
+                            type: 'line',
+                            data: {
+                                labels: data.chart_labels,
+                                datasets: [{
+                                    label: 'Ten',
+                                    backgroundColor: '#0087d8',
+                                    data: data.chart_values
+                                }]
+                            },
+                            options: {
+                                title: {
+                                    display: true,
+                                    text: 'Tensão média nos ultimos 7 dias'
+                                },
+                                legend:{
+                                    display: false,
+                                },
+                            },
+                        });
+                    } else {
+                            console.log('Erro no gráfico de tensão')
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

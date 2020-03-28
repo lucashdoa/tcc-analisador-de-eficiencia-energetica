@@ -8,7 +8,7 @@
 }
 
 #tag-a-rectangle {
-    width: 100px;
+    width: 350px;
     height: 40px;
     position: relative;
     background: #00ff00;
@@ -40,7 +40,7 @@
 
 /*TAG B*/
 #tag-b-rectangle {
-    width: 120px;
+    width: 410px;
     height: 40px;
     position: relative;
     background: #4dff00;
@@ -72,7 +72,7 @@
 
 /*TAG C*/
 #tag-c-rectangle {
-    width: 140px;
+    width: 470px;
     height: 40px;
     position: relative;
     background: #b3ff00;
@@ -104,7 +104,7 @@
 
 /*TAG D*/
 #tag-d-rectangle {
-    width: 160px;
+    width: 530px;
     height: 40px;
     position: relative;
     background: #ffff00;
@@ -136,7 +136,7 @@
 
 /*TAG E*/
 #tag-e-rectangle {
-    width: 180px;
+    width: 590px;
     height: 40px;
     position: relative;
     background: #ffb300;
@@ -168,7 +168,7 @@
 
 /*TAG F*/
 #tag-f-rectangle {
-    width: 200px;
+    width: 650px;
     height: 40px;
     position: relative;
     background: #ff4d00;
@@ -200,7 +200,7 @@
 
 /*TAG G*/
 #tag-g-rectangle {
-    width: 220px;
+    width: 710px;
     height: 40px;
     position: relative;
     background: #ff0000;

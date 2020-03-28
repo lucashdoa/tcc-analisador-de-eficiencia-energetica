@@ -89,12 +89,14 @@ def home(request):
     })
 
 
-def panel(request):
+def panel(request, user_id):
     user = User.objects.get(username=request.user)
-    user_househould_appliances = HouseholdAppliance.objects.filter(user=user)
+    user_household_appliances = HouseholdAppliance.objects.filter(user=user)
+    selected_household_appliance = HouseholdAppliance.objects.first()
     return render(request, 'panel.html', {
         'user': user,
-        'household_appliances': user_househould_appliances
+        'household_appliances': user_household_appliances,
+        'selected_household_appliance': selected_household_appliance
     })
 
 

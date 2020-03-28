@@ -11,7 +11,7 @@ urlpatterns = [
     path('login', views.login_view, name="login"),
     path('logout', views.logout_view, name="logout"),
     path('home', views.home, name="home_page"),
-    path('painel', views.panel, name="panel"),
-    path(r'^measure_datatable(?P<household_appliance>[0-1]+)/$', views.MeasureDatatable.as_view(), name="measure_datatable"),
+    path('painel/<int:user_id>', views.panel, name="panel"),
+    path(r'^measure_datatable(P<household_appliance>)/$', views.MeasureDatatable.as_view(), name="measure_datatable"),
     path('test_chart', views.test_chart, name="test_chart")
 ]

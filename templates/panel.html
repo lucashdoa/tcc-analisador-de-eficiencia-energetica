@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Monitor de Eficiência Energética</title>
-
     <script
             src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -57,7 +56,7 @@
             <nav class="header-nav">
                 <ul class="header-menu">
                     <li><a href="{% url 'index' %}">Início</a></li>
-                    {% if user.is_authenticated %}<li class="menu-active"><a href="{% url 'panel' %}">Painel</a></li>{% endif %}
+                    {% if user.is_authenticated %}<li class="menu-active"><a href="{% url 'panel' request.user.id %}">Painel</a></li>{% endif %}
                     <li><a href="{% url 'about' %}">Sobre</a></li>
                     <li><a href="{% url 'pbe' %}"">PBE</a></li>
                     <li><a href="{% url 'help' %}">Ajuda</a></li>
@@ -70,9 +69,15 @@
 
     <main>
         <div class="main-container">
-            <h2>{{ household_appliances.first.type }} {{ household_appliances.first.brand }} - {{ household_appliances.first.model }}</h2>
+            <h2>{{ selected_household_appliance.type }} {{ selected_household_appliance.brand }} - {{ selected_household_appliance.model }}</h2>
+
             <div class="main-content">
                 <div class="segment">
+                    <select class="ui dropdown">
+                        {% for item in household_appliances %}
+                            <option value="0">{{ item.type }} {{ item.brand }} - {{ item.model}}</option>
+                        {% endfor %}
+                    </select>
                     <h3 class="segment-title">Etiqueta atualizada</h3>
                     <div id="tag-a" class="tag-div">
                         <div id="tag-a-rectangle"></div>
@@ -189,9 +194,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
-
-    {#DataTable#}
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
             var measures_datatable = $('#measure-datatable').DataTable({
                 dom: "<'ui stackable grid'<'row'<'ten wide column'B><'right aligned six wide column'f>><'row dt-table'<'sixteen wide column'tr>><'row'<'seven wide column'i><'right aligned nine wide column'p>>>",
@@ -204,12 +207,13 @@
                 }],
                 processing: true,
                 serverSide: true,
-                ajax: "{% url 'measure_datatable' household_appliances.first %}",
+                ajax: "{% url 'measure_datatable' selected_household_appliance %}",
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.16/i18n/Portuguese-Brasil.json"
                 }
             });
         });
+
     </script>
 
     {#Chart#}
@@ -228,7 +232,7 @@
                                 labels: data.chart_labels,
                                 datasets: [{
                                     label: 'Ten',
-                                    backgroundColor: '#0087d8',
+                                    backgroundColor: 'rgba(0,135,216,.5)',
                                     data: data.chart_values
                                 }]
                             },

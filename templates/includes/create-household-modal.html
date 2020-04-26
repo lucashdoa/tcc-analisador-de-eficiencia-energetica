@@ -1,0 +1,79 @@
+<div id="add-household-modal" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Cadastrar eletrodoméstico
+    </div>
+
+    <div class="form-container">
+
+        <form class="ui form">
+            <div class="field">
+                <label>Tipo</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="type">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Tipo</div>
+                    <div class="menu">
+                        <div class="item" data-value="0">Refrigerador</div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Modelo</label>
+                <input type="text" name="model" placeholder="Modelo do eletrodoméstico">
+            </div>
+            <div class="field">
+                <label>Marca</label>
+                <input type="text" name="brand" placeholder="Nome da empresa fabricante do eletrodoméstico">
+            </div>
+
+{#            REFRIGERATOR FIELDS#}
+            <div class="refrigerator-fields" v-if="type='Refrigerator'">
+                <hr>
+                <div class="field">
+                    <h4><span class="ui red text">ATENÇÃO</span>: As informações a seguir podem ser encontradas na <span class="ui blue text">ENCE</span> do refrigerador.</h4>
+                </div>
+                <div class="field">
+                    <label>Consumo energético</label>
+                    <input type="text" name="brand" placeholder="Consumo energético mensal estimado (kWh/mês)">
+                </div>
+
+                <div class="field">
+                    <label>Classificação</label>
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="type">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Classificação do equipamento quando a sua eficiência energética</div>
+                        <div class="menu">
+                            <div class="item" data-value="0">A</div>
+                            <div class="item" data-value="1">B</div>
+                            <div class="item" data-value="2">C</div>
+                            <div class="item" data-value="3">D</div>
+                            <div class="item" data-value="4">E</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Volume do compartimento refrigerador</label>
+                    <input type="text" name="" placeholder="">
+                </div>
+
+                <div class="field">
+                    <label>Volume do compartimento congelador</label>
+                    <input type="text" name="" placeholder="">
+                </div>
+
+                <div class="field">
+                    <label>Número de estrelas do congelador</label>
+                    <input type="text" name="" placeholder="">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="actions">
+        <div class="ui blue button">Cadastrar</div>
+    </div>
+</div>

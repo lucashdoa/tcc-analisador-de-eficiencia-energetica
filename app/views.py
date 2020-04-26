@@ -93,10 +93,12 @@ def panel(request, user_id):
     user = User.objects.get(username=request.user)
     user_household_appliances = HouseholdAppliance.objects.filter(user=user)
     selected_household_appliance = HouseholdAppliance.objects.first()
+    address = Address.objects.get(user=user)
     return render(request, 'panel.html', {
         'user': user,
         'household_appliances': user_household_appliances,
-        'selected_household_appliance': selected_household_appliance
+        'address': address,
+        'selected_household_appliance': selected_household_appliance,
     })
 
 
@@ -150,7 +152,7 @@ def test_chart(request):
             voltage = 0
             past_date = date.today()-timedelta(days=idx)
             try:
-                daily_measures_queryset = Measure.objects.filter(created_at__day=past_date.day)
+                daily_measures_queryset = Measure.objects.filter(created_at__day=past_date.day, created_at__month=past_date.month, created_at__year=past_date.year)
                 for measure in daily_measures_queryset:
                     voltage += measure.voltage
                 voltage = voltage/daily_measures_queryset.count()

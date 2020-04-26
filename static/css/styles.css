@@ -249,6 +249,9 @@ header{
 footer{
     background: #404040;
     padding: 50px 0;
+    position:absolute;
+    width: 100%;
+
 }
 .footer-container{
     width: 960px;

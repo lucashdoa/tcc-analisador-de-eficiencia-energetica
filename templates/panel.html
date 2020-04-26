@@ -78,7 +78,13 @@
                             <option value="0">{{ item.type }} {{ item.brand }} - {{ item.model}}</option>
                         {% endfor %}
                     </select>
-                    <h3 class="segment-title">Etiqueta atualizada</h3>
+                <div class="ui hidden divider"></div>
+                    <div class="panel-container">
+                        <h3>Custo aproximado em R$</h3>
+                        <p>Companhia de energia do endereço cadastrado: {{ address.energy_company }}</p>
+                    </div>
+
+                    <h3 class="segment-title">Classificação atualizada</h3>
                     <div id="tag-a" class="tag-div">
                         <div id="tag-a-rectangle"></div>
                         <div id="tag-a-pointer">
@@ -179,7 +185,6 @@
                         <canvas id="test-chart"></canvas>
                     </div>
                 </div>
-
         </div>
     </main>
 

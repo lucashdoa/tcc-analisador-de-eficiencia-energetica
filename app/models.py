@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-
-# Create your models here.
 class Address(models.Model):
     user = models.ForeignKey(get_user_model(), related_name="address", on_delete=models.DO_NOTHING)
     street = models.TextField()
@@ -22,6 +20,15 @@ class HouseholdAppliance(models.Model):
     classification = models.CharField(max_length=1)
     brand = models.TextField(blank=True, null=True)
     purchased_at = models.DateField()
+
+
+class Refrigerator(models.Model):
+    household_appliance = models.OneToOneField(HouseholdAppliance, on_delete=models.CASCADE, primary_key=True)
+    category = models.TextField()
+    refrigerator_volume = models.IntegerField()
+    freezer_volume = models.IntegerField()
+    freezer_stars = models.IntegerField()
+    is_frost_free = models.BooleanField()
 
 
 class Measure(models.Model):

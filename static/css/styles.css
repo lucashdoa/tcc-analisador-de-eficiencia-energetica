@@ -272,7 +272,7 @@ hr{
     margin: 20px 0px;
 }
 
-@media (max-width: 600px){
+@media (max-width: 720px){
     html{
         /*min-width: fit-content;*/
         max-width: 100vw;

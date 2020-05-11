@@ -6,7 +6,7 @@
 }
 
 html, body{
-    height: 100%;
+    height: 100%
 }
 
 header{
@@ -89,7 +89,7 @@ header{
 }
 
 main{
-    min-height:  calc(100vh - 350px);;
+    min-height:  calc(100vh - 350px);
 }
 .main-container{
     width: 960px;
@@ -274,6 +274,77 @@ hr{
 
 @media (max-width: 600px){
     html{
-        background-color: tomato;
+        /*min-width: fit-content;*/
+        max-width: 100vw;
+        height: auto;
+        min-height: 100% !important;
+        position: relative;
     }
+    body{
+        min-width: 100%;
+        /*height: auto;*/
+        /*min-height: 100% !important;*/
+        /*position: relative;*/
+    }
+    *{
+        font-size: 20px;
+    }
+
+    /*HEADER*/
+    .header-container{
+        height: auto;
+        min-height: 100% !important;
+        position: relative;
+    }
+    .header-logo{
+        width: 100%;
+        margin: 0px auto;
+        text-align: center;
+    }
+    .header-nav{
+        margin-top: 10px;
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+    .header-nav ul{
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    /*-----*/
+    main{
+        width: 100%;
+    }
+    .main-container{
+        max-width: 100%;
+    }
+    .header-container{
+        width: 100%;
+    }
+    footer{
+        width: 100%;
+    }
+    .footer-container{
+        width: 100%;
+    }
+
+    .form{
+        max-width: 100%;
+        margin: 0px;
+    }
+    .main-login{
+        max-height: 100%;
+        max-width: 100%;
+    }
+    .login-page{
+        width: 100%;
+    }
+
+    .segment p{
+        width: 100%;
+    }
+
 }

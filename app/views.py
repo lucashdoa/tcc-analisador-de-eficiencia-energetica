@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.utils.datetime_safe import date
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django_datatables_view.base_datatable_view import BaseDatatableView
-from app.models import Address, HouseholdAppliance, Measure
+from app.models import Address, HouseholdAppliance, Measure, Refrigerator
 
 
 def index(request):
@@ -131,6 +131,50 @@ def panel(request, user_id):
         'selected_household_appliance': selected_household_appliance,
     })
 
+def add_household_appliance(request):
+    type = json.loads(request.body)['type']
+    model = json.loads(request.body)['model']
+    brand = json.loads(request.body)['brand']
+    energy_consumption = json.loads(request.body)['energyConsumption']
+    classification = json.loads(request.body)['classification']
+    refrigerator_volume = json.loads(request.body)['refrigeratorVolume']
+    freezer_volume = json.loads(request.body)['freezerVolume']
+    freezer_stars = json.loads(request.body)['freezerStars']
+    frost_free = json.loads(request.body)['frostFree']
+    category = json.loads(request.body)['category']
+    try:
+        household_appliance = HouseholdAppliance(
+            user=request.user,
+            type=type,
+            model=model,
+            brand=brand,
+            energy_consumption=energy_consumption,
+            classification=classification,
+            purchased_at=datetime.datetime.now()
+        )
+        household_appliance.save()
+
+        refrigerator = Refrigerator(
+            household_appliance=household_appliance,
+            category=category,
+            refrigerator_volume=refrigerator_volume,
+            freezer_volume=freezer_volume,
+            freezer_stars=freezer_stars,
+            is_frost_free=frost_free
+        )
+
+        refrigerator.save()
+        if refrigerator:
+            return JsonResponse({
+                'success': True,
+            })
+    except:
+        return JsonResponse({
+            'success': False,
+        })
+    return JsonResponse({
+        'success': False,
+    })
 
 class MeasureDatatable(BaseDatatableView):
     def get_initial_queryset(self):

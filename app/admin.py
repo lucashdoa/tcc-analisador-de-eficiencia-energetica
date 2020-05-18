@@ -5,3 +5,4 @@ from . import models
 admin.site.register(models.HouseholdAppliance)
 admin.site.register(models.Address)
 admin.site.register(models.Measure)
+admin.site.register(models.Refrigerator)

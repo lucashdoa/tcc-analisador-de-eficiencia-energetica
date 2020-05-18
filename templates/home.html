@@ -137,8 +137,36 @@
                     console.log('click');
                     $('#add-household-modal').modal('show');
                 },
-                test: function(){
-                    console.log("Vue funciona");
+                addHouseholdAppliance: function(){
+                    let newType = document.querySelector("#new-type").value;
+                    let newModel = document.querySelector("#new-model").value;
+                    let newBrand = document.querySelector("#new-brand").value;
+                    let newEnergyConsumption = document.querySelector("#new-energy-consumption").value;
+                    let newClassification = document.querySelector("#new-classification").value;
+                    let newRefrigeratorVolume = document.querySelector("#new-refrigerator-volume").value;
+                    let newFreezerVolume = document.querySelector("#new-freezer-volume").value;
+                    let newFreezerStars = document.querySelector("#new-freezer-stars").value;
+                    let newFrostFree = document.querySelector("#new-frost-free").value === "1";
+                    let newCategory = document.querySelector("#new-category").value;
+                    let self = this;
+                    axios.defaults.headers.common['X-CSRFToken'] = '{{csrf_token}}';
+                    axios.post('{% url 'add_household_appliance' %}', {
+                        type: newType,
+                        model: newModel,
+                        brand: newBrand,
+                        energyConsumption: newEnergyConsumption,
+                        classification: newClassification,
+                        refrigeratorVolume: newRefrigeratorVolume,
+                        freezerVolume: newFreezerVolume,
+                        freezerStars: newFreezerStars,
+                        frostFree: newFrostFree,
+                        category: newCategory,
+                        csrfmiddlewaretoken: '{{csrf_token}}',
+                    }).then(function(response){
+                        window.location.href = '/home';
+                    })
+
+
                 }
             }
 

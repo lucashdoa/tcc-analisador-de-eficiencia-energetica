@@ -41,7 +41,7 @@
                             <input name="register-last-name" type="text" placeholder="Sobrenome"/>
                             <p v-if="emailError" class="error-message">Email já cadastrado</p>
                             <input v-model.lazy="email" name="register-email" type="text" placeholder="Email"/>
-                            <p v-if="passwordError" class="error-message">As senhas não conferem</p>
+                            <p v-if="passwordError" class="error-message">As senhas digitadas devem ser iguais!</p>
                             <input name="register-password" type="password" placeholder="Senha"/>
                             <input name="register-password2" type="password" placeholder="Repita a senha"/>
                             <button @click.prevent="register">CADASTRAR</button>
@@ -120,7 +120,24 @@
                     }
 
                     if(!this.emailError && !this.passwordError){
-
+                        self = this;
+                        //Checks if email is already registered
+                        axios.defaults.headers.common['X-CSRFToken'] = '{{csrf_token}}';
+                        axios.post('{% url 'register' %}', {
+                            firstName: firstName,
+                            lastName: lastName,
+                            email: email,
+                            password: password,
+                            csrfmiddlewaretoken: '{{csrf_token}}'
+                        }).then(function(response){
+                            if(response.data.success){
+                                console.log(response.data.success);
+                                self.loginError = false;
+                                window.location.href = '/home';
+                            } else{
+                                self.loginError = true;
+                            }
+                        })
                     }
 
 

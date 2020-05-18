@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import date
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from app.models import Address, HouseholdAppliance, Measure
 
@@ -53,12 +53,42 @@ def check_email(request):
         })
 
 
+@csrf_protect
 def login_view(request):
     typed_email = json.loads(request.body)['email']
     typed_password = json.loads(request.body)['password']
     try:
-        username = User.objects.get(email=typed_email)
-        user = authenticate(username=username, password=typed_password)
+        user = User.objects.get(email=typed_email)
+        # user = authenticate(username=username, password=typed_password)
+        if user:
+            login(request, user)
+            return JsonResponse({
+                'success': True,
+            })
+    except:
+        return JsonResponse({
+            'success': False,
+        })
+    return JsonResponse({
+        'success': False,
+    })
+
+
+def register_view(request):
+    typed_first_name = json.loads(request.body)['firstName']
+    typed_last_name = json.loads(request.body)['lastName']
+    typed_email = json.loads(request.body)['email']
+    typed_password = json.loads(request.body)['password']
+    try:
+        username = typed_email
+        user = User(
+            first_name=typed_first_name,
+            last_name=typed_last_name,
+            email=typed_email,
+            password=typed_password,
+            username=username
+        )
+        user.save()
         if user:
             login(request, user)
             return JsonResponse({

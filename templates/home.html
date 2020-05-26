@@ -10,7 +10,7 @@
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous">
     </script>
-    <title>Monitor de Eficiência Energética</title>
+    <title>Analisador de Eficiência Energética</title>
     <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}"  media="screen" type="text/css">
     <link rel="stylesheet" href="{% static 'css/icons.min.css' %}">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.4/dist/semantic.min.js"></script>
@@ -24,7 +24,7 @@
         <div class="header-container">
             <div class="header-logo">
                 <img src="{% static "img/logo.svg" %}" alt="logo"/>
-                <h1>Monitor de Eficiência Energética</h1>
+                <h1>Analisador de Eficiência Energética</h1>
             </div>
             <nav class="header-nav">
                 {% include 'includes/navbar-menu.html' %}
@@ -57,7 +57,16 @@
                     <div>
                         {% if addresses %}
                             {% for address in addresses %}
-                                <h4>Endereço {{ forloop.counter }}</h4>
+                                <h4>Endereço {{ forloop.counter }}
+                                    <div class="ui icon inline button" data-tooltip="Editar este endereço"
+                                        @click="showEditAddressModal"
+                                    >
+                                        <i class="pen icon"></i>
+                                    </div>
+                                    <div class="ui icon inline button" data-tooltip="Excluir este endereço">
+                                        <i class="trash icon"></i>
+                                    </div>
+                                </h4>
                                 <label for="street">Rua</label>
                                 <input id="address-street-{{ address.pk }}" name="street" type="text" placeholder="Nome" value="{{ address.street }}" disabled/>
                                 <label for="number">Número</label>
@@ -79,24 +88,38 @@
                         {% else %}
                             <p>Você não possui nenhum endereço cadastrado.</p>
                         {% endif %}
-                    <button class="home-button">Cadastrar novo endereço</button>
+                    <button id="show-add-address-modal" class="home-button"
+                            @click="showAddAddressModal">
+                        Cadastrar novo endereço
+                    </button>
                     </div>
                     <hr/>
                     <h3>Eletrodomésticos</h3>
                     <div>
                         {% if household_appliances %}
                             {% for item in household_appliances %}
-                                <h4>Eletrodoméstico {{ forloop.counter }}</h4>
+                                <h4>Eletrodoméstico {{ forloop.counter }}
+                                    <div id="item-{{ item.id }}"
+                                         class="ui icon inline button"
+                                         data-tooltip="Editar este eletrodoméstico"
+                                         @click="showEditHouseholdModal"
+                                    >
+                                        <i class="pen icon"></i>
+                                    </div>
+                                    <div class="ui icon inline button" data-tooltip="Excluir este eletrodoméstico">
+                                        <i class="trash icon"></i>
+                                    </div>
+                                </h4>
                                 <label for="type">Tipo</label>
-                                <input id="item-type-{{ item.pk }}" name="type" type="text" placeholder="Tipo" value="{{ item.type }}" disabled/>
+                                <input id="item-{{ item.pk }}-type" name="type" type="text" placeholder="Tipo" value="{{ item.type }}" disabled/>
                                 <label for="model">Modelo</label>
-                                <input id="item-model-{{ item.pk }}" name="model" type="text" placeholder="Modelo" value="{{ item.model }}" disabled/>
+                                <input id="item-{{ item.pk }}-model" name="model" type="text" placeholder="Modelo" value="{{ item.model }}" disabled/>
                                 <label for="brand">Marca</label>
-                                <input id="item-brand-{{ item.pk }}" name="brand" type="text" placeholder="Tipo" value="{{ item.brand }}" disabled/>
+                                <input id="item-{{ item.pk }}-brand" name="brand" type="text" placeholder="Tipo" value="{{ item.brand }}" disabled/>
                                 <label for="classification">Classificação obtida no PBE</label>
-                                <input id="item-classification-{{ item.pk }}" name="classification" type="text" placeholder="Classificação" value="{{ item.classification }}" disabled/>
+                                <input id="item-{{ item.pk }}-classification" name="classification" type="text" placeholder="Classificação" value="{{ item.classification }}" disabled/>
                                 <label for="energy_consumption">Consumo informado pelo fabricante (kWh/mês)</label>
-                                <input id="item-energy-consumption-{{ item.pk }}" name="energy_consumption" type="text" placeholder="Consumo" value="{{ item.energy_consumption }}" disabled/>
+                                <input id="item-{{ item.pk }}-energy-consumption" name="energy_consumption" type="text" placeholder="Consumo" value="{{ item.energy_consumption }}" disabled/>
 
                             {% endfor %}
                         {% else %}
@@ -109,7 +132,9 @@
                 </div>
             </div>
         </div>
-     {% include 'includes/create-household-modal.html' %}
+        {% include 'includes/create-household-modal.html' %}
+        {% include 'includes/create-address-modal.html' %}
+        {% include 'includes/edit-household-modal.html' %}
     </main>
 
     <footer>
@@ -129,13 +154,15 @@
         var home = new Vue({
             el: '#home',
             data:{
-              type: false
+                type: false,
             },
             delimiters: ['[[',']]'],
             methods:{
                 showAddHouseholdModal: function () {
-                    console.log('click');
                     $('#add-household-modal').modal('show');
+                },
+                showAddAddressModal: function(){
+                    $('#add-address-modal').modal('show');
                 },
                 addHouseholdAppliance: function(){
                     let newType = document.querySelector("#new-type").value;
@@ -167,7 +194,25 @@
                     })
 
 
-                }
+                },
+                addAddress: function(){
+                    alert('Click');
+                },
+                showEditHouseholdModal: function(event){
+                    $('#edit-household-modal').modal('show');
+                    let itemId = event.currentTarget.id;
+                    let itemType = document.querySelector(`#${itemId}-type`).value;
+                    let itemModel = document.querySelector(`#${itemId}-model`).value;
+                    let itemBrand = document.querySelector(`#${itemId}-brand`).value;
+                    console.log(itemType);
+                    console.log(itemModel);
+                    document.querySelector('#edit-type').value = itemType;
+                    document.querySelector('#edit-model').value = itemModel;
+                    document.querySelector('#edit-brand').value = itemBrand;
+                },
+                editHouseholdAppliance: function(){
+                    console.log('ola');
+                },
             }
 
         });

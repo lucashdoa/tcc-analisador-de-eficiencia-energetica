@@ -1,0 +1,103 @@
+<div id="edit-household-modal" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Editar eletrodoméstico
+    </div>
+    <div class="form-container">
+
+        <form class="ui form">
+            <div class="field">
+                <label>Tipo</label>
+                <div class="ui selection dropdown">
+                    <input type="hidden" name="type" id="edit-type">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Tipo</div>
+                    <div class="menu">
+                        <div class="item" data-value="Refrigerador">Refrigerador</div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Modelo</label>
+                <input type="text" name="model" placeholder="Modelo do eletrodoméstico" id="edit-model">
+            </div>
+            <div class="field">
+                <label>Marca</label>
+                <input id="edit-brand" type="text" name="brand" placeholder="Nome da empresa fabricante do eletrodoméstico">
+            </div>
+
+{#            REFRIGERATOR FIELDS#}
+            <div class="refrigerator-fields" v-if="type='Refrigerator'">
+                <hr>
+                <div class="field">
+                    <h4><span class="ui red text">ATENÇÃO</span>: As informações a seguir podem ser encontradas na <span class="ui blue text">ENCE</span> do refrigerador.</h4>
+                </div>
+                 <div class="field">
+                    <label>Categoria</label>
+                    <div class="ui selection dropdown">
+                        <input id="edit-category" type="hidden" name="category">
+                        <i class="dropdown icon"></i>
+                        <div class="default text"></div>
+                        <div class="menu">
+                            <div class="item" data-value="Refrigerador">Somente refrigerador</div>
+                            <div class="item" data-value="Combinado">Combinado (refrigerador e congelador)</div>
+                            <div class="item" data-value="Congelador Vertical">Congelador/Freezer Vertical</div>
+                            <div class="item" data-value="Congelador Horizontal">Congelador/Freezer Horizontal</div>
+                        </div>
+                    </div>
+                </div>
+                   <div class="field">
+                    <label>Frost-free</label>
+                    <div class="ui selection dropdown">
+                        <input id="edit-frost-free" type="hidden" name="frost-free">
+                        <i class="dropdown icon"></i>
+                        <div class="default text"></div>
+                        <div class="menu">
+                            <div class="item" data-value="1">Sim</div>
+                            <div class="item" data-value="0">Não</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Consumo energético</label>
+                    <input id="edit-energy-consumption" type="text" name="energy-consumption" placeholder="Consumo energético mensal estimado (kWh/mês)">
+                </div>
+
+                <div class="field">
+                    <label>Classificação</label>
+                    <div class="ui selection dropdown">
+                        <input id="edit-classification" type="hidden" name="classification">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Classificação do equipamento quanto a sua eficiência energética</div>
+                        <div class="menu">
+                            <div class="item" data-value="A">A</div>
+                            <div class="item" data-value="B">B</div>
+                            <div class="item" data-value="C">C</div>
+                            <div class="item" data-value="D">D</div>
+                            <div class="item" data-value="E">E</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Volume do compartimento refrigerador</label>
+                    <input id="edit-refrigerator-volume" type="text" name="refrigerator-volume" placeholder="">
+                </div>
+
+                <div class="field">
+                    <label>Volume do compartimento congelador</label>
+                    <input id="edit-freezer-volume" type="text" name="freezer-volume" placeholder="">
+                </div>
+
+                <div class="field">
+                    <label>Número de estrelas do congelador</label>
+                    <input id="edit-freezer-stars" type="text" name="freezer-stars" placeholder="">
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="actions">
+        <div @click="editHouseholdAppliance" class="ui blue button">Editar</div>
+    </div>
+</div>

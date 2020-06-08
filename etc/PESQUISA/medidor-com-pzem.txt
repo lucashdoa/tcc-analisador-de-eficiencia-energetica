@@ -1,0 +1,8 @@
+http://josecintra.com/blog/medidor-consumo-eletrico-arduino-pzem004t/
+
+https://forum.homeassistantbrasil.com.br/t/configurar-um-medidor-de-energia-pzem-004t-esp8266/418
+
+MANUAL IEE 5 FOLHAS https://www.researchgate.net/publication/330467093_Design_of_an_IoT_Energy_Monitoring_System
+
+TUTORIAL GIGANTE: http://pdacontrolen.com/meter-pzem-004t-with-arduino-esp32-esp8266-python-raspberry-pi/
+http://pdacontrolen.com/measurement-electrical-consumption-with-ubidots-industrial-esp32-pzem-004t/

@@ -1,0 +1,28 @@
+<div id="update-user-modal" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Alterar dados
+    </div>
+
+    <div class="form-container">
+
+        <form class="ui form">
+            <div class="field">
+                <label for="new-first-name">Nome</label>
+                <input id="new-first-name" name="new-first-name" type="text" placeholder="" value="{{ user.first_name }}"/>
+            </div>
+            <div class="field">
+                <label for="new-last-name">Sobrenome</label>
+                <input id="new-last-name" name="new-last-name" type="text" placeholder="" value="{{ user.last_name }}"/>
+            </div>
+            <div class="field">
+                <label for="new-email">Email</label>
+                <input id="new-email" name="new-email" type="text" placeholder="" value="{{ user.email }}"/>
+            </div>
+        </form>
+    </div>
+
+    <div class="actions">
+        <div @click="updateAddress" class="ui blue button">Alterar</div>
+    </div>
+</div>

@@ -8,19 +8,34 @@
 
         <form class="ui form">
             <div class="field">
-                <label>Tipo</label>
-                <div class="ui selection dropdown">
-                    <input type="hidden" name="type" id="new-type">
-                    <i class="dropdown icon"></i>
-                    <div class="default text">Tipo</div>
-                    <div class="menu">
-                        <div class="item" data-value="Refrigerador">Refrigerador</div>
-                    </div>
-                </div>
+                <label for="new-street">Rua</label>
+                <input id="new-address-street" name="new-street" type="text" placeholder="Nome" value=""/>
             </div>
             <div class="field">
-                <label>Modelo</label>
-                <input type="text" name="model" placeholder="Modelo do eletrodoméstico" id="new-model">
+                <label for="number">Número</label>
+                <input id="new-address-number" name="number" type="text" placeholder="Número" value=""/>
+            </div>
+            <div class="field">
+                <label for="neighborhood">Bairro</label>
+                <input id="new-address-neighborhood" name="neighborhood" type="text" placeholder="Bairro" value=""/>
+            </div>
+            <div class="field">
+                <label for="complement">Complemento</label>
+                <input id="new-address-complement" name="complement" type="text" placeholder="Complemento" value="" />
+            </div>
+            <div class="field">
+                <label for="city">Cidade</label>
+                <input id="new-address-city" name="city" type="text" placeholder="Cidade" value="" />
+            </div>
+            <div class="field">
+                <label for="state">Estado</label>
+                <input id="new-address-state" name="state" type="text" placeholder="Estado" value="" />
+            </div>
+            <div class="field">
+                <label for="energy-company">Companhia de energia elétrica</label>
+                <select id="new-address-energy-company" name="energy-company" type="text" placeholder="Companhia de energia elétrica" value="" />
+                    <option v-for="item in energyCompanies">[[item]]</option>
+                </select>
             </div>
         </form>
     </div>

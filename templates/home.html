@@ -48,50 +48,43 @@
                         <label for="email">Email</label>
                         <input name="email" type="text" placeholder="Email" value="{{ user.email }}" disabled/>
                         <div class="home-button-group">
-                            <button class="home-button">Alterar meus dados</button>
-                            <button class="home-button">Alterar senha</button>
+                            <button class="home-button" @click.prevent="showUserModal">Alterar meus dados</button>
+                            <button class="home-button" @click.prevent="showPasswordModal">Alterar senha</button>
                         </div>
                     </form>
                     <hr/>
-                    <h3>Endereços</h3>
+                    <h3>Endereço</h3>
                     <div>
-                        {% if addresses %}
-                            {% for address in addresses %}
-                                <h4>Endereço {{ forloop.counter }}
-                                    <div class="ui icon inline button" data-tooltip="Editar este endereço"
-                                        @click="showEditAddressModal"
-                                    >
-                                        <i class="pen icon"></i>
-                                    </div>
-                                    <div class="ui icon inline button" data-tooltip="Excluir este endereço">
-                                        <i class="trash icon"></i>
-                                    </div>
-                                </h4>
-                                <label for="street">Rua</label>
-                                <input id="address-street-{{ address.pk }}" name="street" type="text" placeholder="Nome" value="{{ address.street }}" disabled/>
-                                <label for="number">Número</label>
-                                <input id="address-number-{{ address.pk }}" name="number" type="text" placeholder="Número" value="{{ address.number }}" disabled/>
-                                <label for="neighborhood">Bairro</label>
-                                <input id="address-neighborhood-{{ address.pk }}" name="neighborhood" type="text" placeholder="Bairro" value="{{ address.neighborhood }}" disabled/>
-                                {% if address.complement %}
-                                    <label for="complement">Complemento</label>
-                                    <input id="address-complement-{{ address.pk }}" name="complement" type="text" placeholder="Complemento" value="{{ address.complement }}" disabled/>
-                                {% else %}
-                                    <label for="complement">Complemento</label>
-                                    <input id="address-complement-{{ address.pk }}" name="complement" type="text" placeholder="Complemento" value="Não informado" disabled/>
-                                {% endif %}
-                                <label for="city">Cidade</label>
-                                <input id="address-city-{{ address.pk }}" name="city" type="text" placeholder="Cidade" value="{{ address.city }}" disabled/>
-                                <label for="energy-company">Companhia de energia elétrica</label>
-                                <input id="address-energy-company-{{ address.pk }}" name="energy-company" type="text" placeholder="Companhia de energia elétrica" value="{{ address.energy_company }}" disabled/>
-                            {% endfor %}
+                        {% if address %}
+                            <label for="street">Rua</label>
+                            <input id="address-street-{{ address.pk }}" name="street" type="text" placeholder="Nome" value="{{ address.street }}" disabled/>
+                            <label for="number">Número</label>
+                            <input id="address-number-{{ address.pk }}" name="number" type="text" placeholder="Número" value="{{ address.number }}" disabled/>
+                            <label for="neighborhood">Bairro</label>
+                            <input id="address-neighborhood-{{ address.pk }}" name="neighborhood" type="text" placeholder="Bairro" value="{{ address.neighborhood }}" disabled/>
+                            {% if address.complement %}
+                                <label for="complement">Complemento</label>
+                                <input id="address-complement-{{ address.pk }}" name="complement" type="text" placeholder="Complemento" value="{{ address.complement }}" disabled/>
+                            {% else %}
+                                <label for="complement">Complemento</label>
+                                <input id="address-complement-{{ address.pk }}" name="complement" type="text" placeholder="Complemento" value="Não informado" disabled/>
+                            {% endif %}
+                            <label for="city">Cidade</label>
+                            <input id="address-city-{{ address.pk }}" name="city" type="text" placeholder="Cidade" value="{{ address.city }}" disabled/>
+                            <label for="energy-company">Companhia de energia elétrica</label>
+                            <input id="address-energy-company-{{ address.pk }}" name="energy-company" type="text" placeholder="Companhia de energia elétrica" value="{{ address.energy_company }}" disabled/>
+                            <button id="show-update-address-modal" class="home-button"
+                                    @click="showUpdateAddressModal">
+                                ALTERAR ENDEREÇO
+                            </button>
                         {% else %}
-                            <p>Você não possui nenhum endereço cadastrado.</p>
+                            <p>Você ainda não cadastrou seu endereço.</p>
+                            <button id="show-add-address-modal" class="home-button"
+                                    @click="showAddAddressModal">
+                                CADASTRAR ENDEREÇO
+                            </button>
                         {% endif %}
-                    <button id="show-add-address-modal" class="home-button"
-                            @click="showAddAddressModal">
-                        Cadastrar novo endereço
-                    </button>
+
                     </div>
                     <hr/>
                     <h3>Eletrodomésticos</h3>
@@ -132,8 +125,11 @@
                 </div>
             </div>
         </div>
-        {% include 'includes/create-household-modal.html' %}
+        {% include 'includes/update-user-modal.html' %}
+        {% include 'includes/update-password-modal.html' %}
         {% include 'includes/create-address-modal.html' %}
+        {% include 'includes/update-address-modal.html' %}
+        {% include 'includes/create-household-modal.html' %}
         {% include 'includes/edit-household-modal.html' %}
     </main>
 
@@ -154,15 +150,38 @@
         var home = new Vue({
             el: '#home',
             data:{
-                type: false,
+                householdType: "",
+                energyCompanies: [],
             },
             delimiters: ['[[',']]'],
+            created(){
+                // Preenche o array com todas as companhias de energia
+                let self = this;
+                fetch("static/TarifaFornecimentoResidencial.json").then((res) => {
+                    console.log(res);
+                    return res.json();
+                }).then((data) => {
+                    console.log('opa');
+                    data.forEach(element => {
+                        self.energyCompanies.push(element.sigDistribuidora);
+                    });
+                });
+            },
             methods:{
+                showUserModal: function () {
+                    $('#update-user-modal').modal('show');
+                },
+                showPasswordModal: function () {
+                    $('#update-password-modal').modal('show');
+                },
                 showAddHouseholdModal: function () {
                     $('#add-household-modal').modal('show');
                 },
                 showAddAddressModal: function(){
                     $('#add-address-modal').modal('show');
+                },
+                showUpdateAddressModal: function(){
+                    $('#update-address-modal').modal('show');
                 },
                 addHouseholdAppliance: function(){
                     let newType = document.querySelector("#new-type").value;
@@ -196,7 +215,31 @@
 
                 },
                 addAddress: function(){
-                    alert('Click');
+                    let street = document.getElementById("new-address-street").value;
+                    let number = document.getElementById("new-address-number").value;
+                    let neighborhood = document.getElementById("new-address-neighborhood").value;
+                    let complement = document.getElementById("new-address-complement").value;
+                    let city = document.getElementById("new-address-city").value;
+                    let state = document.getElementById("new-address-state").value;
+                    let energyCompany = document.getElementById("new-address-energy-company").value;
+
+                    axios.defaults.headers.common['X-CSRFToken'] = '{{csrf_token}}';
+                    axios.post('{% url 'add_address' %}', {
+                        street,
+                        number,
+                        neighborhood,
+                        complement,
+                        city,
+                        state,
+                        energyCompany,
+                        csrfmiddlewaretoken: '{{csrf_token}}',
+                    }).then(function(response){
+                        window.location.href = '/home';
+                    })
+
+                },
+                updateAddress(){
+                    console.log('ola');
                 },
                 showEditHouseholdModal: function(event){
                     $('#edit-household-modal').modal('show');
@@ -217,11 +260,5 @@
 
         });
     </script>
-
-
-
-
-
-
 </body>
 </html>

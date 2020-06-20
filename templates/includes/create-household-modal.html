@@ -1,4 +1,4 @@
-<div id="add-household-modal" class="ui modal">
+<div id="add-household-modal" class="ui fullscreen modal" >
     <i class="close icon"></i>
     <div class="header">
         Cadastrar eletrodoméstico
@@ -7,16 +7,27 @@
     <div class="form-container">
 
         <form class="ui form">
+
+            {% comment %}
             <div class="field">
                 <label>Tipo</label>
                 <div class="ui selection dropdown">
-                    <input type="hidden" name="type" id="new-type">
+                    <input type="hidden" name="type" id="new-type" >
                     <i class="dropdown icon"></i>
                     <div class="default text">Tipo</div>
                     <div class="menu">
                         <div class="item" data-value="Refrigerador">Refrigerador</div>
                     </div>
                 </div>
+            </div>
+            {% endcomment %}
+
+            <div class="field">
+                <label for="new-type">Tipo</label>
+                <select id="new-type" name="new-type" v-model="householdType" />
+                    <option disabled value="">Selecione uma tipo de eletrodoméstico</option>
+                    <option value="refrigerador">Refrigerador</option>
+                </select>
             </div>
             <div class="field">
                 <label>Modelo</label>
@@ -28,7 +39,7 @@
             </div>
 
 {#            REFRIGERATOR FIELDS#}
-            <div class="refrigerator-fields" v-if="type='Refrigerator'">
+            <div class="refrigerator-fields" v-show="householdType === 'refrigerador'">
                 <hr>
                 <div class="field">
                     <h4><span class="ui red text">ATENÇÃO</span>: As informações a seguir podem ser encontradas na <span class="ui blue text">ENCE</span> do refrigerador.</h4>

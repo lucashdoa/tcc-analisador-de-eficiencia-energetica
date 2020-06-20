@@ -110,11 +110,14 @@ def logout_view(request):
 
 def home(request):
     user = User.objects.get(username=request.user)
-    user_addresses = Address.objects.filter(user=user)
+    try:
+        user_addresses = Address.objects.get(user=user)
+    except:
+        user_addresses = None
     user_househould_appliances = HouseholdAppliance.objects.filter(user=user)
     return render(request, 'home.html', {
         'user': user,
-        'addresses': user_addresses,
+        'address': user_addresses,
         'household_appliances': user_househould_appliances
     })
 
@@ -122,12 +125,14 @@ def home(request):
 def panel(request, user_id):
     user = User.objects.get(username=request.user)
     user_household_appliances = HouseholdAppliance.objects.filter(user=user)
+    user_addresses = Address.objects.filter(user=user)
     selected_household_appliance = HouseholdAppliance.objects.first()
     address = Address.objects.get(user=user)
     return render(request, 'panel.html', {
         'user': user,
         'household_appliances': user_household_appliances,
         'address': address,
+        'addresses': user_addresses,
         'selected_household_appliance': selected_household_appliance,
     })
 
@@ -175,6 +180,40 @@ def add_household_appliance(request):
     return JsonResponse({
         'success': False,
     })
+
+def add_address(request):
+    street = json.loads(request.body)['street']
+    number = json.loads(request.body)['number']
+    complement = json.loads(request.body)['complement']
+    neighborhood = json.loads(request.body)['neighborhood']
+    city = json.loads(request.body)['city']
+    state = json.loads(request.body)['state']
+    energy_company = json.loads(request.body)['energyCompany']
+    try:
+        address = Address(
+            user=request.user,
+            street=street,
+            number=number,
+            complement=complement,
+            neighborhood=neighborhood,
+            city=city,
+            state=state,
+            energy_company=energy_company
+        )
+        address.save()
+
+        if address:
+            return JsonResponse({
+                'success': True,
+            })
+    except:
+        return JsonResponse({
+            'success': False,
+        })
+    return JsonResponse({
+        'success': False,
+    })
+
 
 class MeasureDatatable(BaseDatatableView):
     def get_initial_queryset(self):

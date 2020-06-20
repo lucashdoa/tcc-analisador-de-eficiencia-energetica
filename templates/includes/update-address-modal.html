@@ -1,0 +1,46 @@
+<div id="update-address-modal" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+        Alterar endereço
+    </div>
+
+    <div class="form-container">
+
+        <form class="ui form">
+            <div class="field">
+                <label for="update-street">Rua</label>
+                <input id="update-address-street" name="update-street" type="text" placeholder="Nome" value="{{ address.street }}"/>
+            </div>
+            <div class="field">
+                <label for="number">Número</label>
+                <input id="update-address-number" name="number" type="text" placeholder="Número" value="{{ address.number }}"/>
+            </div>
+            <div class="field">
+                <label for="neighborhood">Bairro</label>
+                <input id="update-address-neighborhood" name="neighborhood" type="text" placeholder="Bairro" value="{{ address.neighborhood }}"/>
+            </div>
+            <div class="field">
+                <label for="complement">Complemento</label>
+                <input id="update-address-complement" name="complement" type="text" placeholder="Complemento" value="{{ address.complement }}" />
+            </div>
+            <div class="field">
+                <label for="city">Cidade</label>
+                <input id="update-address-city" name="city" type="text" placeholder="Cidade" value="{{ address.city }}" />
+            </div>
+            <div class="field">
+                <label for="state">Estado</label>
+                <input id="update-address-state" name="state" type="text" placeholder="Estado" value="{{ address.state }}" />
+            </div>
+            <div class="field">
+                <label for="energy-company">Companhia de energia elétrica</label>
+                <select id="update-address-energy-company" name="energy-company" type="text" placeholder="Companhia de energia elétrica" value="" />
+                    <option v-for="item in energyCompanies">[[item]]</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="actions">
+        <div @click="updateAddress" class="ui blue button">Alterar</div>
+    </div>
+</div>

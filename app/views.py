@@ -126,7 +126,7 @@ def panel(request, user_id):
     user = User.objects.get(username=request.user)
     user_household_appliances = HouseholdAppliance.objects.filter(user=user)
     user_addresses = Address.objects.filter(user=user)
-    selected_household_appliance = HouseholdAppliance.objects.first()
+    selected_household_appliance = HouseholdAppliance.objects.filter(user=user).first()
     address = Address.objects.get(user=user)
     return render(request, 'panel.html', {
         'user': user,
@@ -216,9 +216,15 @@ def add_address(request):
 
 
 class MeasureDatatable(BaseDatatableView):
-    def get_initial_queryset(self):
-        aux = Measure.objects.all()
+    def get_initial_queryset(self, *args, **kwargs):
+        household_appliance = self.kwargs['household_appliance']
+        print(household_appliance)
+        try:
+            aux = Measure.objects.filter(household_appliance=household_appliance)
+        except:
+            aux = None
         return aux
+
 
     # define the columns that will be returned
     columns = ['voltage', 'current', 'active_power', 'power_factor', 'frequency', 'energy', 'created_at']

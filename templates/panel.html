@@ -74,9 +74,9 @@
 
             <div class="main-content">
                 <div class="segment">
-                    <select class="ui dropdown">
+                    <select v-on:change="selectHousehold" id="selected-household" class="ui dropdown">
                         {% for item in household_appliances %}
-                            <option value="0">{{ item.type }} {{ item.brand }} - {{ item.model}}</option>
+                            <option value="{{ item.pk }}">{{ item.type }} {{ item.brand }} - {{ item.model}}</option>
                         {% endfor %}
                     </select>
                 <div class="ui hidden divider"></div>
@@ -258,6 +258,20 @@
                 }
             });
         });
+    </script>
+    <script>
+        const select = new Vue({
+            el:"main",
+            data:{
+                selectedHouseholdId: "",
+            },
+            methods:{
+                selectHousehold(){
+                    let selectedValue = document.getElementById("selected-household");
+                    console.log(selectedValue.value);
+                },
+            }
+        })
     </script>
 </body>
 </html>

@@ -81,11 +81,26 @@
                     </select>
                 <div class="ui hidden divider"></div>
                     <div class="panel-container">
-                        <h3>Custo mensal aproximado</h3>
-                        <p>Companhia de energia do endereço selecionado: {{ address.energy_company }}</p>
-                    </div>
 
-                    <h3 class="segment-title">Classificação atualizada</h3>
+                        <h3>Custo mensal aproximado para {% now "M/Y" %}</h3>
+                        <p>Companhia de energia: {{ address.energy_company }}<br/>
+                            Tarifa residêncial(B1) ponta: <span class="panel-info">1,19806 R$/kWh</span> <br/>
+                            Tarifa residêncial(B1) intermediário: <span class="panel-info">0,76971 R$/kWh </span><br/>
+                            Tarifa residêncial(B1) fora ponta: <span class="panel-info">0,51894 R$/kWh</span>: <br/>
+                            Bandeira: <span class="green-flag">Verde</span>
+                        </p>
+                        <p class="msg-cost"> Custo aproximado até a data atual ({% now "SHORT_DATETIME_FORMAT" %}):
+                            <br/>
+                            <div class="energy-cost">R$ 67,21</div>
+                        </p>
+                    </div>
+                    <hr/>
+                    <h3 class="segment-title">Gráfico do consumo nos últimos 7 dias</h3>
+                    <div class="six wide column">
+                        <canvas id="test-chart"></canvas>
+                    </div>
+                    <hr/>
+                    <h3 class="segment-title">Classificação atualizada do equipamento</h3>
                     <div id="tag-a" class="tag-div">
                         <div id="tag-a-rectangle"></div>
                         <div id="tag-a-pointer">
@@ -151,7 +166,7 @@
                     </div>
                     <hr>
 {#                    CHARTS#}
-                    <h3 class="segment-title">Medições</h3>
+                    <h3 class="segment-title">Medições realizadas</h3>
                     <table class="ui celled striped table" id="measure-datatable">
                         <thead>
                         <tr>
@@ -181,10 +196,7 @@
                         </tbody>
                     </table>
                     <hr/>
-                    <h3 class="segment-title">Gráficos</h3>
-                    <div class="six wide column">
-                        <canvas id="test-chart"></canvas>
-                    </div>
+
                 </div>
         </div>
     </main>
@@ -245,7 +257,7 @@
                             options: {
                                 title: {
                                     display: true,
-                                    text: 'Tensão média nos ultimos 7 dias'
+                                    text: 'Consumo energético (kWh) nos ultimos 7 dias'
                                 },
                                 legend:{
                                     display: false,

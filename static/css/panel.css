@@ -257,3 +257,21 @@
     border-bottom: 20px solid transparent;
 }
 
+.energy-cost{
+    font-size: 5em !important;
+    color: #b3ff00;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
+.msg-cost{
+    margin-bottom: 10px !important;
+}
+
+.panel-info{
+    color: #0087d8;
+    cursor: pointer;
+}
+
+.green-flag{
+    color: green;
+}

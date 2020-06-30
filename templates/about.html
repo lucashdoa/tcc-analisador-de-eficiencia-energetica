@@ -19,7 +19,7 @@
             <nav class="header-nav">
                 <ul class="header-menu">
                     <li><a href="{% url 'index' %}">Início</a></li>
-                    {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Painel</a></li>{% endif %}
+                    {% if user.is_authenticated %}<li><a href="{% url 'panel' request.user.id %}">Painel</a></li>{% endif %}
                     <li class="menu-active"><a href="{% url 'about' %}">Sobre</a></li>
                     <li><a href="{% url 'pbe' %}"">PBE</a></li>
                     <li><a href="{% url 'help' %}">Ajuda</a></li>
@@ -39,14 +39,20 @@
 
 
                     <h3>O que é a plataforma ?</h3>
+{#                    <p>#}
+{#                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.#}
+{#                    </p>#}
+
                     <p>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+                        Com a etiqueta obtida pelos equipamentos no PBE, os consumidores podem comprar um eletrodoméstico já sabendo sua classificação e até mesmo o quanto de energia em kwh/mês aquele aparelho irá consumir. No entanto, estudos mostram que após os primeiros anos de uso esse consumo pode começar a aumentar significativamente, podendo chegar a um aumento de 60% após o décimo sexto ano.
+Para um consumidor comum, fazer essa análise tendo apenas em mãos a fatura da conta de energia não é algo factível, muito menos fazer manutenções periódicas ou realizar ensaios para verificar o estado do refrigerador, é comum que só se leve o aparelho a uma pessoa especializada quando o mesmo já está em estado crítico ou já não funcionando. Esta plataforma visa propor uma solução para este problema, utilizando um medidor conectado a internet em conjunto com uma interface de usuário onde o cliente poderá ver um relatório de eficiência energética já processados e com ferramentas visuais como tabelas e gráficos, para que seja possível uma primeira análise sem a necessidade de maiores conhecimentos técnicos da área de engenharia elétrica, ajudando assim em tomada de decisões como procurar assistencia especializada ou trocar o equipamento
+
                     </p>
 
 
                     <h3>Como a plataforma funciona ?</h3>
                     <p>
-                        There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.
+                        A plataforma Analisador de eficiência energética trabalha em conjunto com um medidor conectado à internet, que realiza as medições e em seguida as envia para serem salvas no banco de dados. No servidor, a aplicação realiza os cálculos necessários para a apresentação dos dados de forma que se tornem úteis para análise. É muito simples utilizar a plataforma, caso tenha problemas ao utilizá-la consulte o <a href="{% url 'help' %}">manual</a>, ou entre em contato comigo.
                     </p>
 
                 </div>

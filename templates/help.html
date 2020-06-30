@@ -19,7 +19,7 @@
             <nav class="header-nav">
                 <ul class="header-menu">
                     <li><a href="{% url 'index' %}">Início</a></li>
-                    {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Painel</a></li>{% endif %}
+                    {% if user.is_authenticated %}<li><a href="{% url 'panel' request.user.id %}">Painel</a></li>{% endif %}
                     <li><a href="{% url 'about' %}">Sobre</a></li>
                     <li><a href="{% url 'pbe' %}"">PBE</a></li>
                     <li class="menu-active"><a href="{% url 'help' %}">Ajuda</a></li>
@@ -38,7 +38,8 @@
 
 
                     <h3>Manual da plataforma</h3>
-                    <p>Para fazer o donwload do manual, <a href="#">clique aqui</a>.</p>
+{#                    <p>Para fazer o donwload do manual, <a href="#">clique aqui</a>.</p>#}
+                    <p>EM CONSTRUÇÃO</p>
 
                 </div>
             </div>

@@ -19,7 +19,7 @@
             <nav class="header-nav">
                 <ul class="header-menu">
                     <li><a href="{% url 'index' %}">Início</a></li>
-                    {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Painel</a></li>{% endif %}
+                    {% if user.is_authenticated %}<li><a href="{% url 'panel' request.user.id %}">Painel</a></li>{% endif %}
                     <li><a href="{% url 'about' %}">Sobre</a></li>
                     <li><a href="{% url 'pbe' %}"">PBE</a></li>
                     <li><a href="{% url 'help' %}">Ajuda</a></li>
@@ -38,7 +38,7 @@
 
 
                     <h3>Email</h3>
-                    <p>Caso tenha alguma dúvida que não tenha conseguido sanar na aba "Ajuda", envie um email para <span style="color: blue">lucas.andrade@ufu.br</span></p>
+                    <p>Caso tenha alguma dúvida que não tenha sido sanada pelo <a href="{% url 'help' %}">manual</a>, envie um email para <span style="color: blue">lucas.andrade@ufu.br</span></p>
                 </div>
             </div>
         </div>

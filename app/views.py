@@ -268,16 +268,16 @@ def test_chart(request):
         measures = []
         measures_label = []
         for idx in reversed(range(7)):
-            voltage = 0
+            energy = 0
             past_date = date.today()-timedelta(days=idx)
             try:
                 daily_measures_queryset = Measure.objects.filter(created_at__day=past_date.day, created_at__month=past_date.month, created_at__year=past_date.year)
                 for measure in daily_measures_queryset:
-                    voltage += measure.voltage
-                voltage = voltage/daily_measures_queryset.count()
+                    energy += measure.energy
+                energy = energy/daily_measures_queryset.count()
             except:
-                voltage = 0
-            measures.append(voltage)
+                energy = 0
+            measures.append(energy)
             measures_label.append(past_date)
 
         return JsonResponse({'valid': True, 'chart_values': measures, 'chart_labels': measures_label})

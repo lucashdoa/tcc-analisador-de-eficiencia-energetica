@@ -6,10 +6,10 @@ from django.db.models.functions import datetime
 from django.utils import timezone
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.datetime_safe import date
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_exempt, csrf_protect, ensure_csrf_cookie
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from app.models import Address, HouseholdAppliance, Measure, Refrigerator
 
@@ -283,3 +283,32 @@ def test_chart(request):
         return JsonResponse({'valid': True, 'chart_values': measures, 'chart_labels': measures_label})
     except:
         return JsonResponse({'valid': False, 'error_message': "Deu pau."})
+
+@csrf_exempt
+def measures_save_api(request):
+    print(request.body)
+    user_id = json.loads(request.body)['user']
+    household_id = json.loads(request.body)['household']
+    voltage = json.loads(request.body)['voltage']
+    current = json.loads(request.body)['current']
+    power = json.loads(request.body)['power']
+    energy = json.loads(request.body)['energy']
+    pf = json.loads(request.body)['pf']
+    try:
+        measure = Measure(
+            household_appliance=HouseholdAppliance.objects.get(id=household_id),
+            voltage=voltage,
+            current=current,
+            active_power=power,
+            energy=energy,
+            power_factor=pf
+        )
+        measure.save()
+        if measure:
+            return JsonResponse({
+                'success': True,
+            })
+    except:
+        return JsonResponse({
+            'success': False
+        })

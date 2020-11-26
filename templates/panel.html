@@ -59,7 +59,7 @@
                     <li><a href="{% url 'index' %}">Início</a></li>
                     {% if user.is_authenticated %}<li class="menu-active"><a href="{% url 'panel' request.user.id %}">Painel</a></li>{% endif %}
                     <li><a href="{% url 'about' %}">Sobre</a></li>
-                    <li><a href="{% url 'pbe' %}"">PBE</a></li>
+                    <li><a href="{% url 'pbe' %}">PBE</a></li>
                     <li><a href="{% url 'help' %}">Ajuda</a></li>
                     <li><a href="{% url 'contact' %}">Contato</a></li>
                     {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Sair</a></li>{% endif %}
@@ -84,14 +84,13 @@
 
                         <h3>Custo mensal aproximado para {% now "M/Y" %}</h3>
                         <p>Companhia de energia: {{ address.energy_company }}<br/>
-                            Tarifa residêncial(B1) ponta: <span class="panel-info">1,19806 R$/kWh</span> <br/>
-                            Tarifa residêncial(B1) intermediário: <span class="panel-info">0,76971 R$/kWh </span><br/>
-                            Tarifa residêncial(B1) fora ponta: <span class="panel-info">0,51894 R$/kWh</span>: <br/>
-                            Bandeira: <span class="green-flag">Verde</span>
+                            Tarifa residêncial(B1) TUSD: <span class="panel-info">[[taxTUSD]] R$/MWh</span> <br/>
+                            Tarifa residêncial(B1) TE: <span class="panel-info">[[taxTE]] R$/MWh</span><br/>
+                            Bandeira: <span class="green-flag">[[flag]]</span>
                         </p>
-                        <p class="msg-cost"> Custo aproximado até a data atual ({% now "SHORT_DATETIME_FORMAT" %}):
+                        <p class="msg-cost"> Custo estimado do consumo de energia do equipamento no mês:
                             <br/>
-                            <div class="energy-cost">R$ 47,21</div>
+                            <div class="energy-cost">R$ [[equipmentCost]]</div>
                         </p>
                     </div>
                     <hr/>
@@ -106,63 +105,77 @@
                         <div id="tag-a-pointer">
                             A
                         </div>
+                        {% if classification == 'A' %}
                         <div class="tag-pointer-black">
                             A
                         </div>
+                        {% endif %}
                     </div>
                     <div id="tag-b" class="tag-div">
                         <div id="tag-b-rectangle"></div>
                         <div id="tag-b-pointer">
                             B
                         </div>
+                        {% if classification == 'B' %}
                         <div class="tag-pointer-black">
                             B
                         </div>
+                        {% endif %}
                     </div>
                     <div id="tag-c" class="tag-div">
                         <div id="tag-c-rectangle"></div>
                         <div id="tag-c-pointer">
                             C
                         </div>
+                        {% if classification == 'C' %}
                         <div class="tag-pointer-black">
                             C
                         </div>
+                        {% endif %}
                     </div>
                     <div id="tag-d" class="tag-div">
                         <div id="tag-d-rectangle"></div>
                         <div id="tag-d-pointer">
                             D
                         </div>
+                        {% if classification == 'D' %}
                         <div class="tag-pointer-black">
                             D
                         </div>
+                        {% endif %}
                     </div>
                     <div id="tag-e" class="tag-div">
                         <div id="tag-e-rectangle"></div>
                         <div id="tag-e-pointer">
                             E
                         </div>
+                        {% if classification == 'E' %}
                         <div class="tag-pointer-black">
                             E
                         </div>
+                        {% endif %}
                     </div>
                     <div id="tag-f" class="tag-div">
                         <div id="tag-f-rectangle"></div>
                         <div id="tag-f-pointer">
                             F
                         </div>
+                        {% if classification == 'F' %}
                         <div class="tag-pointer-black">
                             F
                         </div>
+                        {% endif %}
                     </div>
                     <div id="tag-g" class="tag-div">
                         <div id="tag-g-rectangle"></div>
                         <div id="tag-g-pointer">
                             G
                         </div>
+                        {% if classification == 'G' %}
                         <div class="tag-pointer-black">
                             G
                         </div>
+                        {% endif %}
                     </div>
                     <hr>
 {#                    CHARTS#}
@@ -274,15 +287,55 @@
     <script>
         const select = new Vue({
             el:"main",
+            delimiters: ['[[', ']]'],
             data:{
                 selectedHouseholdId: "",
+                currentDate: (new Date()).toISOString().split('T')[0],
+                energyCompany: "{{ address.energy_company }}",
+                energyConsumed: "{{ consumed_energy }}",
+                equipmentCost: "",
+                flag: "",
+                taxTUSD: "",
+                taxTE: "",
+            },
+            created(){
+              this.getFlag();
+              this.getTax();
             },
             methods:{
                 selectHousehold(){
                     let selectedValue = document.getElementById("selected-household");
                     console.log(selectedValue.value);
                 },
-            }
+                getFlag(){
+
+                    self = this;
+                    axios.get(`https://apise.way2.com.br/v1/bandeiras/?api_key=62cbcd1acdc847b6884dad558bd43f93&datainicial=${self.currentDate}`)
+                    .then(function (response){
+                        console.log(response.data.body.items[0].flagType);
+                        let flagNumber = response.data.body.items[0].flagType;
+                        if(flagNumber === 0) self.flag = "Verde";
+                        if(flagNumber === 1) self.flag = "Amarela";
+                        if(flagNumber === 2) self.flag = "Vermelha - Patamar 1";
+                        if(flagNumber === 3) self.flag = "Vermelha - Patamar 2";
+                        console.log(self.flag);
+                    })
+
+                },
+                getTax(){
+                    self = this;
+                    axios.get(`https://apise.way2.com.br/v1/tarifas/?api_key=62cbcd1acdc847b6884dad558bd43f93&agente=${self.energyCompany.toUpperCase()}&ano=${self.currentDate.substr(0,4)}`)
+                    .then( (response) => {
+                        console.log(response.data[138])
+                        let res = response.data[138];
+                        self.taxTUSD = res.tarifaconsumotusd;
+                        self.taxTE = res.tarifaconsumote;
+                        self.equipmentCost = (((self.taxTUSD/1000) * self.energyConsumed) + ((self.taxTE/1000) * self.energyConsumed)).toFixed(2)
+                        console.log(self.equipmentCost)
+                    })
+                },
+
+            },
         })
     </script>
 </body>

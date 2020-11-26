@@ -17,5 +17,5 @@ urlpatterns = [
     path('painel/<int:user_id>', views.panel, name="panel"),
     path('measure_datatable/<str:household_appliance>', views.MeasureDatatable.as_view(), name="measure_datatable"),
     path('test_chart', views.test_chart, name="test_chart"),
-    path('measures_api/', views.measures_save_api)
+    path('measures_api/', views.measures_save_api),
 ]

@@ -13,6 +13,87 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect, ensure_csrf_
 from django_datatables_view.base_datatable_view import BaseDatatableView
 from app.models import Address, HouseholdAppliance, Measure, Refrigerator
 
+def get_consumed_energy(household_appliance):
+    measures_queryset = Measure.objects.filter(household_appliance=household_appliance.pk)
+    power_sum = 0
+    for measure in measures_queryset:
+        power_sum += measure.active_power
+    mean_power = power_sum/measures_queryset.count()
+    return (mean_power*24*30)/1000
+
+def calculate_IEE_refrigarator(household_appliance):
+    # 1 - Calcular volume ajustado: AV = Vr + Somatoria(f*Vc)
+
+    f = 0.0
+    if household_appliance.freezer_stars == 1:
+        f = 1.41
+    if household_appliance.freezer_stars == 2:
+        f = 1.63
+    if household_appliance.freezer_stars == 3:
+        f = 1.85
+    Vr = household_appliance.refrigerator_volume
+    Vc = household_appliance.freezer_volume
+
+    # Se for Frost-Free, Vr e Vc são multiplicados por 1,2
+    if household_appliance.is_frost_free is True:
+        Vr = Vr * 1.2;
+        Vc = Vc * 1.2;
+
+    AV = Vr + (f*Vc)
+
+    # 2 - Calcular consumo padrão: Cp = a*AV + b
+    if household_appliance.category == "Refrigerador":
+        a = 0.0346
+        b = 19.117
+    if household_appliance.category == "Combinado" and household_appliance.is_frost_free is False:
+        a = 0.0916
+        b = 17.083
+    if household_appliance.category == "Combinado" and household_appliance.is_frost_free is True:
+        a = 0.1059
+        b = 7.4862
+    if household_appliance.category == "Congelador Vertical" and household_appliance.is_frost_free is False:
+        a = 0.0211
+        b = 39.228
+    if household_appliance.category == "Congelador Vertical" and household_appliance.is_frost_free is True:
+        a = 0.0178
+        b = 58.712
+    if household_appliance.category == "Congelador Horizontal":
+        a = 0.0758
+        b = 13.095
+
+    Cp = (a*AV) + b
+
+    # 3 - Calcular o consumo declarado (C)
+    measures_queryset = Measure.objects.filter(household_appliance=household_appliance.pk)
+    power_sum = 0
+    for measure in measures_queryset:
+        power_sum += measure.active_power
+    mean_power = power_sum/measures_queryset.count()
+    C = (mean_power*24*30)/1000
+    print("C :", C)
+
+    # 4 - Calcular índicepytho de eficiência energética: IEE = C/Cp
+
+    IEE = float(C)/float(Cp)
+    print(IEE)
+
+    # 5 - Definir classificação
+
+    if IEE < 0.869:
+        return 'A'
+    if IEE < 0.949:
+        return 'B'
+    if IEE < 1.020:
+        return 'C'
+    if IEE < 1.097:
+        return 'D'
+    if IEE < 1.179:
+        return 'E'
+    if IEE < 1.267:
+        return 'F'
+    else:
+        return 'G'
+
 
 def index(request):
     if request.user.is_authenticated:
@@ -128,12 +209,17 @@ def panel(request, user_id):
     user_addresses = Address.objects.filter(user=user)
     selected_household_appliance = HouseholdAppliance.objects.filter(user=user).first()
     address = Address.objects.get(user=user)
+    classification = calculate_IEE_refrigarator(selected_household_appliance.refrigerator)
+    consumed_energy = get_consumed_energy(selected_household_appliance.refrigerator)
+    print(classification)
     return render(request, 'panel.html', {
         'user': user,
         'household_appliances': user_household_appliances,
         'address': address,
         'addresses': user_addresses,
         'selected_household_appliance': selected_household_appliance,
+        'classification': classification,
+        'consumed_energy': consumed_energy
     })
 
 def add_household_appliance(request):
@@ -292,6 +378,7 @@ def measures_save_api(request):
     voltage = json.loads(request.body)['voltage']
     current = json.loads(request.body)['current']
     power = json.loads(request.body)['power']
+    frequency = json.loads(request.body)['frequency']
     energy = json.loads(request.body)['energy']
     pf = json.loads(request.body)['pf']
     try:
@@ -300,6 +387,7 @@ def measures_save_api(request):
             voltage=voltage,
             current=current,
             active_power=power,
+            frequency=frequency,
             energy=energy,
             power_factor=pf
         )

@@ -267,6 +267,27 @@ def add_household_appliance(request):
         'success': False,
     })
 
+def update_user_data(request):
+    new_first_name = json.loads(request.body)['newFirstName']
+    new_last_name = json.loads(request.body)['newLastName']
+    new_email = json.loads(request.body)['newEmail']
+    print(new_first_name)
+    print(new_last_name)
+    print(new_email)
+    try:
+        user = User.objects.get(username=request.user)
+        user.first_name = new_first_name
+        user.last_name = new_last_name
+        user.email = new_email
+        user.save()
+        return JsonResponse({
+            'success': True,
+        })
+    except:
+        return JsonResponse({
+            'success': False,
+        })
+
 def add_address(request):
     street = json.loads(request.body)['street']
     number = json.loads(request.body)['number']
@@ -299,6 +320,33 @@ def add_address(request):
     return JsonResponse({
         'success': False,
     })
+
+def update_address(request):
+    street = json.loads(request.body)['newStreet']
+    number = json.loads(request.body)['newNumber']
+    complement = json.loads(request.body)['newComplement']
+    neighborhood = json.loads(request.body)['newNeighborhood']
+    city = json.loads(request.body)['newCity']
+    state = json.loads(request.body)['newState']
+    energy_company = json.loads(request.body)['newEnergyCompany']
+    user_address = Address.objects.get(user=request.user)
+    try:
+        user_address.street = street
+        user_address.number = number
+        user_address.complement = complement
+        user_address.neighborhood = neighborhood
+        user_address.city = city
+        user_address.state = state
+        user_address.energy_company  = energy_company
+        user_address.save()
+        return JsonResponse({
+            'success': True,
+        })
+    except:
+        return JsonResponse({
+            'success': False,
+        })
+
 
 
 class MeasureDatatable(BaseDatatableView):

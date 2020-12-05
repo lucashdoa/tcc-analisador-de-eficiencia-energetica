@@ -157,13 +157,13 @@
             created(){
                 // Preenche o array com todas as companhias de energia
                 let self = this;
-                fetch("static/TarifaFornecimentoResidencial.json").then((res) => {
+                fetch("https://apise.way2.com.br/v1/agentes/?api_key=62cbcd1acdc847b6884dad558bd43f93").then((res) => {
                     console.log(res);
                     return res.json();
                 }).then((data) => {
-                    console.log('opa');
+                    console.log(data);
                     data.forEach(element => {
-                        self.energyCompanies.push(element.sigDistribuidora);
+                        self.energyCompanies.push(element.nome);
                     });
                 });
             },
@@ -238,8 +238,41 @@
                     })
 
                 },
+                updateUserData(){
+                    const newFirstName = document.querySelector('#new-first-name').value;
+                    const newLastName = document.querySelector('#new-last-name').value;
+                    const newEmail = document.querySelector('#new-email').value;
+                    axios.defaults.headers.common['X-CSRFToken'] = '{{csrf_token}}';
+                    axios.post('{% url 'update_user_data' %}', {
+                        newFirstName,
+                        newLastName,
+                        newEmail,
+                        csrfmiddlewaretoken: '{{csrf_token}}',
+                    }).then(function(response){
+                        window.location.href = '/home';
+                    })
+                },
                 updateAddress(){
-                    console.log('ola');
+                    const newStreet = document.querySelector('#update-address-street').value;
+                    const newNumber = document.querySelector('#update-address-number').value;
+                    const newNeighborhood = document.querySelector('#update-address-neighborhood').value;
+                    const newComplement = document.querySelector('#update-address-complement').value;
+                    const newCity = document.querySelector('#update-address-city').value;
+                    const newState = document.querySelector('#update-address-state').value;
+                    const newEnergyCompany = document.querySelector('#update-address-energy-company').value;
+                    axios.defaults.headers.common['X-CSRFToken'] = '{{csrf_token}}';
+                    axios.post('{% url 'update_address' %}', {
+                        newStreet,
+                        newNumber,
+                        newNeighborhood,
+                        newComplement,
+                        newCity,
+                        newState,
+                        newEnergyCompany,
+                        csrfmiddlewaretoken: '{{csrf_token}}',
+                    }).then(function(response){
+                        window.location.href = '/home';
+                    })
                 },
                 showEditHouseholdModal: function(event){
                     $('#edit-household-modal').modal('show');

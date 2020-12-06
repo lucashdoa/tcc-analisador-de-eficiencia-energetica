@@ -14,14 +14,18 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from app.models import Address, HouseholdAppliance, Measure, Refrigerator
 
 def get_consumed_energy(household_appliance):
-    measures_queryset = Measure.objects.filter(household_appliance=household_appliance.pk)
+    measures_queryset = Measure.objects.filter(household_appliance=household_appliance.pk,created_at__month=(datetime.datetime.now().month - 1))
     power_sum = 0
     for measure in measures_queryset:
         power_sum += measure.active_power
-    mean_power = power_sum/measures_queryset.count()
+    try:
+        mean_power = power_sum/measures_queryset.count()
+    except:
+        mean_power = 0
     return (mean_power*24*30)/1000
 
 def calculate_IEE_refrigarator(household_appliance):
+
     # 1 - Calcular volume ajustado: AV = Vr + Somatoria(f*Vc)
 
     f = 0.0
@@ -207,10 +211,18 @@ def panel(request, user_id):
     user = User.objects.get(username=request.user)
     user_household_appliances = HouseholdAppliance.objects.filter(user=user)
     user_addresses = Address.objects.filter(user=user)
-    selected_household_appliance = HouseholdAppliance.objects.filter(user=user).first()
+    try:
+        selectedHouseholdID = request.POST.get('selected-household')
+        selected_household_appliance = HouseholdAppliance.objects.get(id=selectedHouseholdID)
+    except:
+        selected_household_appliance = HouseholdAppliance.objects.filter(user=user).first()
     address = Address.objects.get(user=user)
-    classification = calculate_IEE_refrigarator(selected_household_appliance.refrigerator)
-    consumed_energy = get_consumed_energy(selected_household_appliance.refrigerator)
+    try:
+        classification = calculate_IEE_refrigarator(selected_household_appliance.refrigerator)
+        consumed_energy = get_consumed_energy(selected_household_appliance.refrigerator)
+    except:
+        classification = 0
+        consumed_energy = 0
     print(classification)
     return render(request, 'panel.html', {
         'user': user,
@@ -221,6 +233,8 @@ def panel(request, user_id):
         'classification': classification,
         'consumed_energy': consumed_energy
     })
+
+
 
 def add_household_appliance(request):
     type = json.loads(request.body)['type']
@@ -407,8 +421,8 @@ def test_chart(request):
             try:
                 daily_measures_queryset = Measure.objects.filter(created_at__day=past_date.day, created_at__month=past_date.month, created_at__year=past_date.year)
                 for measure in daily_measures_queryset:
-                    energy += measure.energy
-                energy = energy/daily_measures_queryset.count()
+                    energy += measure.active_power
+                energy = (energy/daily_measures_queryset.count())*24/1000
             except:
                 energy = 0
             measures.append(energy)

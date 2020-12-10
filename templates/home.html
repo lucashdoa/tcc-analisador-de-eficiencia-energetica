@@ -99,8 +99,12 @@
                                     >
                                         <i class="pen icon"></i>
                                     </div>
-                                    <div class="ui icon inline button" data-tooltip="Excluir este eletrodoméstico">
-                                        <i class="trash icon"></i>
+                                    <div class="ui icon inline button"
+                                         data-tooltip="Excluir este eletrodoméstico"
+                                         v-on:click="showDeleteHouseholdModal"
+                                         id="deleteHousehold-{{ item.pk }}"
+                                    >
+                                        <i id="deleteHouseholdIcon-{{ item.pk }}" class="trash icon"></i>
                                     </div>
                                 </h4>
                                 <label for="type">Tipo</label>
@@ -113,6 +117,15 @@
                                 <input id="item-{{ item.pk }}-classification" name="classification" type="text" placeholder="Classificação" value="{{ item.classification }}" disabled/>
                                 <label for="energy_consumption">Consumo informado pelo fabricante (kWh/mês)</label>
                                 <input id="item-{{ item.pk }}-energy-consumption" name="energy_consumption" type="text" placeholder="Consumo" value="{{ item.energy_consumption }}" disabled/>
+                                {# Hidden Inputs #}
+                                <div id="hidden-div" style="display: none;">
+                                    <input id="item-{{ item.pk}}-category" name="category" type="text" placeholder="" value="{{ item.refrigerator.category }}" disabled/>
+                                    <input id="item-{{ item.pk}}-frost-free" name="frost-free" type="text" placeholder="" value="{{ item.refrigerator.is_frost_free }}" disabled/>
+                                    <input id="item-{{ item.pk}}-refrigerator-volume" name="refrigerator-volume" type="text" placeholder="" value="{{ item.refrigerator.refrigerator_volume }}" disabled/>
+                                    <input id="item-{{ item.pk}}-freezer-volume" name="freezer-volume" type="text" placeholder="" value="{{ item.refrigerator.freezer_volume }}" disabled/>
+                                    <input id="item-{{ item.pk}}-freezer-stars" name="freezer-stars" type="text" placeholder="" value="{{ item.refrigerator.freezer_stars }}" disabled/>
+
+                                </div>
 
                             {% endfor %}
                         {% else %}
@@ -131,6 +144,7 @@
         {% include 'includes/update-address-modal.html' %}
         {% include 'includes/create-household-modal.html' %}
         {% include 'includes/edit-household-modal.html' %}
+        {% include 'includes/delete-household-modal.html' %}
     </main>
 
     <footer>
@@ -152,6 +166,8 @@
             data:{
                 householdType: "",
                 energyCompanies: [],
+                toDeleteHousehold: null,
+                toEditHousehold: null,
             },
             delimiters: ['[[',']]'],
             created(){
@@ -277,17 +293,87 @@
                 showEditHouseholdModal: function(event){
                     $('#edit-household-modal').modal('show');
                     let itemId = event.currentTarget.id;
+                    let indexSlash = itemId.indexOf("-")
                     let itemType = document.querySelector(`#${itemId}-type`).value;
                     let itemModel = document.querySelector(`#${itemId}-model`).value;
                     let itemBrand = document.querySelector(`#${itemId}-brand`).value;
-                    console.log(itemType);
-                    console.log(itemModel);
+                    let itemCategory = document.querySelector(`#${itemId}-category`).value;
+                    let itemFrostFree = document.querySelector(`#${itemId}-frost-free`).value == "True" ? "Sim" : "Não";
+                    let itemClassification = document.querySelector(`#${itemId}-classification`).value;
+                    let itemRefrigeratorVolume = document.querySelector(`#${itemId}-refrigerator-volume`).value;
+                    let itemFreezerVolume = document.querySelector(`#${itemId}-freezer-volume`).value;
+                    let itemFreezerStars = document.querySelector(`#${itemId}-freezer-stars`).value;
+                    let itemEnergyConsumption = document.querySelector(`#${itemId}-energy-consumption`).value;
+
+                    this.toEditHousehold = parseInt(itemId.substr(indexSlash + 1 ));
+                    console.log(this.toEditHousehold);
                     document.querySelector('#edit-type').value = itemType;
                     document.querySelector('#edit-model').value = itemModel;
                     document.querySelector('#edit-brand').value = itemBrand;
+                    document.querySelector('#edit-default-category').textContent = itemCategory;
+                    document.querySelector('#edit-frost-free-default').textContent = itemFrostFree;
+                    document.querySelector('#edit-default-classification').textContent = itemClassification;
+                    document.querySelector('#edit-refrigerator-volume').value = itemRefrigeratorVolume;
+                    document.querySelector('#edit-freezer-volume').value = itemFreezerVolume;
+                    document.querySelector('#edit-freezer-stars').value = itemFreezerStars;
+                    document.querySelector('#edit-energy-consumption').value = itemEnergyConsumption;
+                },
+                showDeleteHouseholdModal: function(event){
+                    $('#delete-household-modal').modal('show');
+                    let householdId = event.target.id;
+                    let indexSlash = householdId.indexOf("-")
+                    this.toDeleteHousehold = parseInt(householdId.substr(indexSlash + 1));
+
                 },
                 editHouseholdAppliance: function(){
-                    console.log('ola');
+                    let newType = document.querySelector("#edit-type").value;
+                    let newModel = document.querySelector("#edit-model").value;
+                    let newBrand = document.querySelector("#edit-brand").value;
+                    let newEnergyConsumption = document.querySelector("#edit-energy-consumption").value;
+                    let newClassification = document.querySelector("#edit-classification").value;
+                    let newRefrigeratorVolume = document.querySelector("#edit-refrigerator-volume").value;
+                    let newFreezerVolume = document.querySelector("#edit-freezer-volume").value;
+                    let newFreezerStars = document.querySelector("#edit-freezer-stars").value;
+                    let newFrostFree = document.querySelector("#edit-frost-free").value === "1";
+                    let newCategory = document.querySelector("#edit-category").value;
+                    let self = this;
+                    console.log(newType);
+                    console.log(newModel);
+                    console.log(newBrand);
+                    console.log(newEnergyConsumption);
+                    console.log(newClassification);
+                    console.log(newRefrigeratorVolume);
+                    console.log(newFreezerStars);
+                    console.log(newFrostFree);
+                    console.log(newCategory);
+                    axios.defaults.headers.common['X-CSRFToken'] = '{{csrf_token}}';
+                    axios.post('{% url 'edit_household_appliance' %}', {
+                        toEditHousehold: self.toEditHousehold,
+                        type: newType,
+                        model: newModel,
+                        brand: newBrand,
+                        energyConsumption: newEnergyConsumption,
+                        classification: newClassification,
+                        refrigeratorVolume: newRefrigeratorVolume,
+                        freezerVolume: newFreezerVolume,
+                        freezerStars: newFreezerStars,
+                        frostFree: newFrostFree,
+                        category: newCategory,
+                        csrfmiddlewaretoken: '{{csrf_token}}',
+                    }).then(function(response){
+                        window.location.href = '/home';
+                    })
+                },
+                deleteHouseholdAppliance: function(){
+                    console.log(this.toDeleteHousehold)
+                    axios.defaults.headers.common['X-CSRFToken'] = '{{csrf_token}}';
+                    axios.post('{% url 'delete_household_appliance' %}', {
+                        toDeleteHousehold: this.toDeleteHousehold,
+                        csrfmiddlewaretoken: '{{csrf_token}}',
+                    }).then(function(response){
+                        console.log(response);
+                        window.location.href = '/home';
+                    });
                 },
             }
 

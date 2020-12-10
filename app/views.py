@@ -14,6 +14,7 @@ from django_datatables_view.base_datatable_view import BaseDatatableView
 from app.models import Address, HouseholdAppliance, Measure, Refrigerator
 
 def get_consumed_energy(household_appliance):
+    # Definir o mês das medidas na linha abaixo
     measures_queryset = Measure.objects.filter(household_appliance=household_appliance.pk,created_at__month=(datetime.datetime.now().month - 1))
     power_sum = 0
     for measure in measures_queryset:
@@ -279,6 +280,52 @@ def add_household_appliance(request):
         })
     return JsonResponse({
         'success': False,
+    })
+
+def edit_household_appliance(request):
+    to_edit_id = json.loads(request.body)['toEditHousehold']
+    type = json.loads(request.body)['type']
+    model = json.loads(request.body)['model']
+    brand = json.loads(request.body)['brand']
+    energy_consumption = json.loads(request.body)['energyConsumption']
+    classification = json.loads(request.body)['classification']
+    refrigerator_volume = json.loads(request.body)['refrigeratorVolume']
+    freezer_volume = json.loads(request.body)['freezerVolume']
+    freezer_stars = json.loads(request.body)['freezerStars']
+    frost_free = json.loads(request.body)['frostFree']
+    category = json.loads(request.body)['category']
+    try:
+        household_appliance = HouseholdAppliance.objects.get(pk=to_edit_id)
+        household_appliance.classification = classification
+        household_appliance.energy_consumption = energy_consumption
+        household_appliance.brand = brand
+        household_appliance.model = model
+        household_appliance.type = type
+        household_appliance.refrigerator.freezer_stars = freezer_stars
+        household_appliance.refrigerator.freezer_volume = freezer_volume
+        household_appliance.refrigerator.refrigerator_volume = refrigerator_volume
+        household_appliance.refrigerator.is_frost_free = frost_free
+        household_appliance.refrigerator.category = category
+
+        household_appliance.save()
+    except:
+        return JsonResponse({
+            'success': False,
+        })
+    return JsonResponse({
+        'success': True,
+    })
+
+def delete_household_appliance(request):
+    to_delete_id = json.loads(request.body)['toDeleteHousehold']
+    try:
+        HouseholdAppliance.objects.get(pk=to_delete_id).delete()
+    except:
+        return JsonResponse({
+            'success': False,
+        })
+    return JsonResponse({
+        'success': True,
     })
 
 def update_user_data(request):

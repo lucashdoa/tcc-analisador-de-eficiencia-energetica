@@ -34,7 +34,10 @@
             <div class="field">
                 <label for="energy-company">Companhia de energia elétrica</label>
                 <select id="update-address-energy-company" name="energy-company" type="text" placeholder="Companhia de energia elétrica" value="" />
-                    <option v-for="item in energyCompanies">[[item]]</option>
+                    <option selected disabled>{{ address.energy_company }}</option>
+                    <option v-for="item in energyCompanies">
+                        [[item]]
+                    </option>
                 </select>
             </div>
         </form>

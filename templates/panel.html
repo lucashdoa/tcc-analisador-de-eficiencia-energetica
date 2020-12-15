@@ -348,8 +348,11 @@
                     self = this;
                     axios.get(`https://apise.way2.com.br/v1/tarifas/?api_key=62cbcd1acdc847b6884dad558bd43f93&agente=${self.energyCompany.toUpperCase()}&ano=${self.currentDate.substr(0,4)}`)
                     .then( (response) => {
-                        console.log(response.data[138])
-                        let res = response.data[138];
+                        let filteredResponse = response.data.filter( (element) => {
+                            return element.subgrupo == 'B1' && element.modalidade == 'CONVENCIONAL' && element.subclasse == 'RESIDENCIAL';
+                        });
+                        console.table(filteredResponse)
+                        let res = filteredResponse[0];
                         self.taxTUSD = res.tarifaconsumotusd;
                         self.taxTE = res.tarifaconsumote;
                         self.equipmentCost = (((self.taxTUSD/1000) * self.energyConsumed) + ((self.taxTE/1000) * self.energyConsumed)).toFixed(2)

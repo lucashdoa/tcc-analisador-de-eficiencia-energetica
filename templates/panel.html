@@ -346,7 +346,7 @@
                 },
                 getTax(){
                     self = this;
-                    axios.get(`https://apise.way2.com.br/v1/tarifas/?api_key=62cbcd1acdc847b6884dad558bd43f93&agente=${self.energyCompany.toUpperCase()}&ano=${self.currentDate.substr(0,4)}`)
+                    axios.get(`https://apise.way2.com.br/v1/tarifas/?api_key=62cbcd1acdc847b6884dad558bd43f93&agente=${self.energyCompany.toUpperCase()}&ano=2020`)
                     .then( (response) => {
                         let filteredResponse = response.data.filter( (element) => {
                             return element.subgrupo == 'B1' && element.modalidade == 'CONVENCIONAL' && element.subclasse == 'RESIDENCIAL';

@@ -334,7 +334,6 @@
                     self = this;
                     axios.get(`https://apise.way2.com.br/v1/bandeiras/?api_key=62cbcd1acdc847b6884dad558bd43f93&datainicial=${self.currentDate}`)
                     .then(function (response){
-                        console.log(response.data.body.items[0].flagType);
                         let flagNumber = response.data.body.items[0].flagType;
                         if(flagNumber === 0) self.flag = "Verde";
                         if(flagNumber === 1) self.flag = "Amarela";
@@ -356,7 +355,7 @@
                         self.taxTUSD = res.tarifaconsumotusd;
                         self.taxTE = res.tarifaconsumote;
                         self.equipmentCost = (((self.taxTUSD/1000) * self.energyConsumed) + ((self.taxTE/1000) * self.energyConsumed)).toFixed(2)
-                        console.log(self.equipmentCost)
+                        console.log(self.equipmentCost);
                     })
                 },
 

@@ -15,7 +15,7 @@ from app.models import Address, HouseholdAppliance, Measure, Refrigerator
 
 def get_consumed_energy(household_appliance):
     # Definir o mês das medidas na linha abaixo
-    measures_queryset = Measure.objects.filter(household_appliance=household_appliance.pk,created_at__month=(datetime.datetime.now().month - 1))
+    measures_queryset = Measure.objects.filter(household_appliance=household_appliance.pk,created_at__month=(datetime.datetime.now().month))
     power_sum = 0
     for measure in measures_queryset:
         power_sum += measure.active_power
@@ -320,7 +320,8 @@ def delete_household_appliance(request):
     to_delete_id = json.loads(request.body)['toDeleteHousehold']
     try:
         HouseholdAppliance.objects.get(pk=to_delete_id).delete()
-    except:
+    except Exception as e:
+        print(e)
         return JsonResponse({
             'success': False,
         })
